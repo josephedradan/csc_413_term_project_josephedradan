@@ -2,57 +2,25 @@ package edu.csc413.tankgame.model;
 
 import edu.csc413.tankgame.Constants;
 
-/** Entity class representing all tanks in the game. */
-public abstract class Tank extends Entity {
-    // TODO: Implement. A lot of what's below is relevant to all Entity types, not just Tanks. Move it accordingly to
-    //       Entity class.
-    private String id;
-    private double x;
-    private double y;
-    private double angle;
+import static edu.csc413.tankgame.Constants.*;
 
-    public Tank(String id, double x, double y, double angle) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.angle = angle;
+/**
+ * Entity class representing all tanks in the game.
+ */
+public abstract class Tank extends Dynamic {
+
+
+    public Tank(String typeId, double x, double y, double angle, String image) {
+        super(typeId, x, y, angle, image);
     }
 
-    public String getId() {
-        return id;
+    public Tank(String typeId, double x, double y, double angle) {
+        super(typeId, x, y, angle, IMAGE_TANK_AI);
     }
 
-    public double getX() {
-        return x;
-    }
 
-    public double getY() {
-        return y;
-    }
-
-    public double getAngle() {
-        return angle;
-    }
-
-    // TODO: The methods below are provided so you don't have to do the math for movement. You should call these methods
-    //       from the various subclasses of Entity in their implementations of move.
-
-    protected void moveForward(double movementSpeed) {
-        x += movementSpeed * Math.cos(angle);
-        y += movementSpeed * Math.sin(angle);
-    }
-
-    protected void moveBackward(double movementSpeed) {
-        x -= movementSpeed * Math.cos(angle);
-        y -= movementSpeed * Math.sin(angle);
-    }
-
-    protected void turnLeft(double turnSpeed) {
-        angle -= turnSpeed;
-    }
-
-    protected void turnRight(double turnSpeed) {
-        angle += turnSpeed;
+    protected Shell activatePrimaryAction() {
+        return new ShellStandard(SHELL_STANDARD_ID, getShellX(), getShellY(), getShellAngle(), this);
     }
 
     // The following methods will be useful for determining where a shell should be spawned when it
@@ -60,14 +28,15 @@ public abstract class Tank extends Entity {
     // even if the tank is rotated. The shell should have the same angle as the tank.
 
     private double getShellX() {
-        return getX() + Constants.TANK_WIDTH / 2 + 45.0 * Math.cos(getAngle()) - Constants.SHELL_WIDTH / 2;
+        return this.getX() + Constants.TANK_WIDTH / 2 + 45.0 * Math.cos(this.getAngle()) - Constants.SHELL_WIDTH / 2;
     }
 
     private double getShellY() {
-        return getY() + Constants.TANK_HEIGHT / 2 + 45.0 * Math.sin(getAngle()) - Constants.SHELL_HEIGHT / 2;
+        return this.getY() + Constants.TANK_HEIGHT / 2 + 45.0 * Math.sin(this.getAngle()) - Constants.SHELL_HEIGHT / 2;
     }
 
     private double getShellAngle() {
-        return getAngle();
+        return this.getAngle();
     }
+
 }

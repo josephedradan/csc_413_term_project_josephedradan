@@ -1,7 +1,7 @@
 # CSC 413 Term Project README
 
-Name:
+Name: Joseph Edradan
 
-Email:
+Email: jedradan@mail.sfsu.edu
 
 Extra Features:

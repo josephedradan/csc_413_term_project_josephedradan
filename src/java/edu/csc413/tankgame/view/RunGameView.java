@@ -1,5 +1,7 @@
 package edu.csc413.tankgame.view;
 
+import edu.csc413.tankgame.model.Entity;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -90,12 +92,13 @@ public class RunGameView extends JPanel {
      * Updates the location and angle of the sprite with the given ID. The sprite must have already been added
      * previously with addSprite.
      */
-    public void setSpriteLocationAndAngle(String id, double x, double y, double angle) {
+    public void setSpriteLocationAndAngle(Entity entity) {
+
         synchronized (spritesById) {
-            if (!spritesById.containsKey(id)) {
-                throw new RuntimeException("No sprite with id '" + id + "' was added. addSprite must be called first.");
+            if (!spritesById.containsKey(entity.getTypeId())) {
+                throw new RuntimeException("No sprite with id '" + entity.getTypeId() + "' was added. addSprite must be called first.");
             }
-            spritesById.get(id).setLocationAndAngle(x, y, angle);
+            spritesById.get(entity.getTypeId()).setLocationAndAngle(entity.getX(), entity.getY(), entity.getAngle());
         }
     }
 

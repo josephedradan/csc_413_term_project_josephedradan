@@ -1,6 +1,9 @@
 package edu.csc413.tankgame.model;
 
+import edu.csc413.tankgame.view.RunGameView;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * GameWorld holds all of the model objects present in the game. GameWorld tracks all moving entities like tanks and
@@ -10,29 +13,69 @@ public class GameWorld {
     // TODO: Implement. There's a lot of information the GameState will need to store to provide contextual information.
     //       Add whatever instance variables, constructors, and methods are needed.
 
-    public GameWorld() {
-        // TODO: Implement.
+
+    // Using hash map because there is 1 thread for the game, I think it should be fine...
+    private final HashMap<String, Entity> entityHashMap;
+    private final RunGameView runGameView;
+
+    private final PriorityQueue<Entity> entityPriorityQueue;
+
+    public GameWorld(RunGameView runGameView) {
+        this.runGameView = runGameView;
+        entityHashMap = new HashMap<>();
+        entityPriorityQueue = new PriorityQueue<>();
     }
 
-    /** Returns a list of all entities in the game. */
+    /**
+     * Returns a list of all entities in the game.
+     * Constantly make a list using a stream here would be slow...
+     */
     public List<Entity> getEntities() {
-        // TODO: Implement.
-        return null;
+        return new ArrayList<>(entityHashMap.values());
     }
 
-    /** Adds a new entity to the game. */
-    public void addEntity(Tank entity) {
-        // TODO: Implement.
+    public Collection<Entity> getEntitiesFast() {
+        return entityHashMap.values();
     }
 
-    /** Returns the Entity with the specified ID. */
+    public Collection<Entity> getEntitiesSlow() {
+        // Slower
+        // return entityHashMap.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
+
+        // Faster
+        return entityHashMap.values().stream().collect(Collectors.toList());
+    }
+
+    /**
+     * Adds a new entity to the game.
+     */
+    public void addEntity(Entity entity) {
+        entityHashMap.put(entity.getTypeId(), entity);
+        runGameView.addSprite(entity.getTypeId(), entity.getImage(), entity.getX(), entity.getY(), entity.getAngle());
+
+    }
+
+    public void addEntityToQueue(Entity entity) {
+        entityPriorityQueue.add(entity);
+    }
+
+    public void pushEntitiesFromQueueToWorld() {
+        for (Entity entity : entityPriorityQueue) {
+            entityHashMap.put(entity.getTypeId(), entity);
+        }
+    }
+
+    /**
+     * Returns the Entity with the specified ID.
+     */
     public Entity getEntity(String id) {
-        // TODO: Implement.
-        return null;
+        return entityHashMap.get(id);
     }
 
-    /** Removes the entity with the specified ID from the game. */
+    /**
+     * Removes the entity with the specified ID from the game.
+     */
     public void removeEntity(String id) {
-        // TODO: Implement.
+        entityHashMap.remove(id);
     }
 }

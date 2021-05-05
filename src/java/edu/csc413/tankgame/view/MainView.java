@@ -42,9 +42,11 @@ public class MainView {
         mainPanelLayout = new CardLayout();
         mainPanel.setLayout(mainPanelLayout);
 
+        // Screen shown when you start
         StartMenuView startMenuView = new StartMenuView("Start Game", startMenuListener);
         mainPanel.add(startMenuView, Screen.START_GAME_SCREEN.getScreenName());
 
+        // Screen shown when you end
         StartMenuView endGameView = new StartMenuView("Restart Game", startMenuListener);
         mainPanel.add(endGameView, Screen.END_MENU_SCREEN.getScreenName());
 
