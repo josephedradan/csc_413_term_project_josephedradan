@@ -56,7 +56,7 @@ public class GameWorld {
     }
 
     public void addEntityToQueue(Entity entity) {
-        System.out.println(entity.getTypeId());
+//        System.out.println(entity.getTypeId());
         entityLinkedList.add(entity);
     }
 

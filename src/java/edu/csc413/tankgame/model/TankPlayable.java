@@ -47,7 +47,7 @@ public class TankPlayable extends Tank {
     @Override
     public void act(GameWorld gameWorld) {
 
-//        System.out.println(Math.toDegrees(getAngle()));
+        System.out.println(Math.toDegrees(getAngle()));
 //        System.out.println(getAngle());
 
         if (keyboardInterpreter.upPressed()) {
