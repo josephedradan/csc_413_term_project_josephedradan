@@ -18,12 +18,12 @@ public class GameWorld {
     private final HashMap<String, Entity> entityHashMap;
     private final RunGameView runGameView;
 
-    private final PriorityQueue<Entity> entityPriorityQueue;
+    private final LinkedList<Entity> entityLinkedList;
 
     public GameWorld(RunGameView runGameView) {
         this.runGameView = runGameView;
         entityHashMap = new HashMap<>();
-        entityPriorityQueue = new PriorityQueue<>();
+        entityLinkedList = new LinkedList<>();
     }
 
     /**
@@ -56,12 +56,13 @@ public class GameWorld {
     }
 
     public void addEntityToQueue(Entity entity) {
-        entityPriorityQueue.add(entity);
+        System.out.println(entity.getTypeId());
+        entityLinkedList.add(entity);
     }
 
     public void pushEntitiesFromQueueToWorld() {
-        for (Entity entity : entityPriorityQueue) {
-            entityHashMap.put(entity.getTypeId(), entity);
+        while (!entityLinkedList.isEmpty()) {
+            addEntity(entityLinkedList.pop());
         }
     }
 

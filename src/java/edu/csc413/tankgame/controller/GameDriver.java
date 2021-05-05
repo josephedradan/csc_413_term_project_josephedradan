@@ -88,11 +88,14 @@ public class GameDriver {
 
         TankPlayable tankPlayable = new TankPlayable(TANK_PLAYER_ID, PLAYER_TANK_INITIAL_X, PLAYER_TANK_INITIAL_Y, PLAYER_TANK_INITIAL_ANGLE, keyboardInterpreter);
 
-        TankAi tankAi = new TankAi(TANK_AI_1_ID, AI_TANK_1_INITIAL_X, AI_TANK_1_INITIAL_Y, AI_TANK_1_INITIAL_Y);
+        TankAi tankAi = new TankAi(TANK_AI_1_ID, 900, AI_TANK_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
+
+        TankAi tankAi2 = new TankAi(TANK_AI_2_ID, 50, AI_TANK_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
 
 
         gameWorld.addEntity(tankPlayable);
         gameWorld.addEntity(tankAi);
+        gameWorld.addEntity(tankAi2);
 
     }
 
@@ -112,6 +115,7 @@ public class GameDriver {
             runGameView.setSpriteLocationAndAngle(entity);
 
         }
+        gameWorld.pushEntitiesFromQueueToWorld();
         return true;
     }
 

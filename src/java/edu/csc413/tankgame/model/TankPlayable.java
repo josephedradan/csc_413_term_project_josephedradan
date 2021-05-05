@@ -47,28 +47,31 @@ public class TankPlayable extends Tank {
     @Override
     public void act(GameWorld gameWorld) {
 
+//        System.out.println(Math.toDegrees(getAngle()));
+//        System.out.println(getAngle());
+
         if (keyboardInterpreter.upPressed()) {
             this.moveForward(Constants.TANK_MOVEMENT_SPEED);
-            System.out.println("Up");
+//            System.out.println("Up");
+//            System.out.println(getX() + " " + getY());
+//            System.out.println(getAngle());
         }
         if (keyboardInterpreter.downPressed()) {
             this.moveBackward(Constants.TANK_MOVEMENT_SPEED);
-            System.out.println("Down");
-
+//            System.out.println("Down");
         }
         if (keyboardInterpreter.leftPressed()) {
             this.turnLeft(Constants.TANK_TURN_SPEED);
-            System.out.println("lef");
+//            System.out.println("Left");
 
         }
         if (keyboardInterpreter.rightPressed()) {
             this.turnRight(Constants.TANK_TURN_SPEED);
-            System.out.println("r");
+//            System.out.println("Right");
         }
         if (keyboardInterpreter.actionPressed()) {
+//            System.out.println("ACTION");
             gameWorld.addEntityToQueue(this.activatePrimaryAction());
-
-            System.out.println("ACTION");
         }
 
     }

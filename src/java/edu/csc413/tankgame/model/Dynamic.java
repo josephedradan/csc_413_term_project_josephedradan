@@ -47,10 +47,33 @@ public abstract class Dynamic extends Entity {
 
     protected void turnLeft(double turnSpeed) {
         angle -= turnSpeed;
+
+        // TODO: FIX THIS ABSOLUTE TRASH MATH
+//        if (angle < 0) {
+//            angle = 2 * Math.PI;
+//        }
+//        if (angle > 2 * Math.PI) {
+//            angle = 0;
+//        }
+
+        angle = angle % (2 * Math.PI);
+
     }
 
     protected void turnRight(double turnSpeed) {
         angle += turnSpeed;
+
+        // TODO: FIX THIS ABSOLUTE TRASH MATH
+
+//        if (angle < 0) {
+//            angle = 2 * Math.PI;
+//        }
+//        if (angle > 2 * Math.PI) {
+//            angle = 0;
+//        }
+
+        angle = angle % (2 * Math.PI);
+
     }
 
     /**

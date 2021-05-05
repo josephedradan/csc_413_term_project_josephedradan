@@ -13,10 +13,10 @@ public class Constants {
     public static final double WALL_WIDTH = 32.0;
     public static final double WALL_HEIGHT = 32.0;
 
-    public static final String TANK_PLAYER_ID = "player-tank";
-    public static final String TANK_AI_1_ID = "ai-tank-1";
-    public static final String TANK_AI_2_ID = "ai-tank-2";
-    public static final String SHELL_STANDARD_ID = "shellStandard-shell";
+    public static final String TANK_PLAYER_ID = "tank-player";
+    public static final String TANK_AI_1_ID = "tank-ai-1";
+    public static final String TANK_AI_2_ID = "tank-ai-2";
+    public static final String SHELL_STANDARD_ID = "shell-standard-shell";
 
     public static final double PLAYER_TANK_INITIAL_X = 250.0;
     public static final double PLAYER_TANK_INITIAL_Y = 200.0;
@@ -40,8 +40,8 @@ public class Constants {
     public static final double SHELL_Y_LOWER_BOUND = -10.0;
     public static final double SHELL_Y_UPPER_BOUND = 768.0;
 
-    public static final String IMAGE_TANK_PLAYER = "player-tank.png";
-    public static final String IMAGE_TANK_AI = "ai-tank.png";
-    public static final String IMAGE_SHELL = "shell.png";
+    public static final String IMAGE_TANK_PLAYER = "tank-player.png";
+    public static final String IMAGE_TANK_AI = "tank-ai.png";
+    public static final String IMAGE_SHELL_STANDARD = "shell.png";
 
 }
