@@ -1,6 +1,8 @@
 package edu.csc413.tankgame.controller;
 
 import edu.csc413.tankgame.model.*;
+import edu.csc413.tankgame.model.tank.TankAi;
+import edu.csc413.tankgame.model.tank.TankPlayable;
 import edu.csc413.tankgame.view.*;
 
 import java.awt.event.ActionEvent;

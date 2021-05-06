@@ -1,6 +1,9 @@
-package edu.csc413.tankgame.model;
+package edu.csc413.tankgame.model.tank;
 
 import edu.csc413.tankgame.Constants;
+import edu.csc413.tankgame.model.Dynamic;
+import edu.csc413.tankgame.model.Shell;
+import edu.csc413.tankgame.model.ShellStandard;
 
 import static edu.csc413.tankgame.Constants.*;
 

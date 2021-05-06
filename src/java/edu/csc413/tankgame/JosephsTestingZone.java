@@ -26,13 +26,6 @@
 
 package edu.csc413.tankgame;
 
-import edu.csc413.tankgame.model.Entity;
-import edu.csc413.tankgame.model.GameWorld;
-import edu.csc413.tankgame.model.TankAi;
-
-import static edu.csc413.tankgame.Constants.*;
-import static edu.csc413.tankgame.Constants.AI_TANK_1_INITIAL_Y;
-
 //public class JosephsTestingZone {
 //
 //    /*

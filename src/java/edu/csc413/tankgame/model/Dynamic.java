@@ -24,7 +24,7 @@
 
 package edu.csc413.tankgame.model;
 
-public abstract class Dynamic extends Entity {
+public abstract class Dynamic extends Entity implements Actable {
 
 
     public Dynamic(String typeId, double x, double y, double angle, String image) {
@@ -49,14 +49,14 @@ public abstract class Dynamic extends Entity {
         angle -= turnSpeed;
 
         // TODO: FIX THIS ABSOLUTE TRASH MATH
-//        if (angle < 0) {
-//            angle = 2 * Math.PI;
-//        }
-//        if (angle > 2 * Math.PI) {
-//            angle = 0;
-//        }
+        if (angle < 0) {
+            angle = 2 * Math.PI;
+        }
+        if (angle > 2 * Math.PI) {
+            angle = 0;
+        }
 
-        angle = angle % (2 * Math.PI);
+//        angle = angle % (2 * Math.PI);
 
     }
 
