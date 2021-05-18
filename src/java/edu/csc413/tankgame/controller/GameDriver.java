@@ -1,7 +1,8 @@
 package edu.csc413.tankgame.controller;
 
+import edu.csc413.tankgame.WallInformation;
 import edu.csc413.tankgame.model.*;
-import edu.csc413.tankgame.model.ai.AIModuleEntityActorStandard;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorBasic;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorCheating;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorTestDummy;
 import edu.csc413.tankgame.model.tank.TankAI;
@@ -12,6 +13,7 @@ import edu.csc413.tankgame.view.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import static edu.csc413.tankgame.Constants.*;
 
@@ -19,8 +21,8 @@ public class GameDriver {
     private final MainView mainView;
     private final RunGameView runGameView;
 
-
     private GameWorld gameWorld;
+    private CollisionDetector collisionDetector;
 
     public GameDriver() {
 
@@ -29,6 +31,8 @@ public class GameDriver {
 
         // Run main window
         runGameView = mainView.getRunGameView();
+
+
     }
 
     public void start() {
@@ -39,9 +43,10 @@ public class GameDriver {
 
     /**
      * Notes:
-     *  Is this an ActionListener? Is called when a button is pressed from the StartMenuView
-     *
+     * Is this an ActionListener? Is called when a button is pressed from the StartMenuView
+     * <p>
      * TODO: FIGURE OUT WHAT THIS DOES
+     *
      * @param actionEvent
      */
     private void startMenuActionPerformed(ActionEvent actionEvent) {
@@ -94,12 +99,15 @@ public class GameDriver {
      */
     private void setUpGame() {
         gameWorld = new GameWorld(runGameView);
+        initializeWWalls(gameWorld);
+        collisionDetector = new CollisionDetector(gameWorld);
+
 
         KeyboardInterpreter keyboardInterpreter = new KeyboardInterpreter(
                 KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
 
-        TankPlayer tankPlayer = new TankPlayer(TANK_PLAYER_ID, PLAYER_TANK_INITIAL_X, PLAYER_TANK_INITIAL_Y, PLAYER_TANK_INITIAL_ANGLE, keyboardInterpreter);
+        TankPlayer tankPlayer = new TankPlayer(ID_TANK_PLAYER, TANK_PLAYER_INITIAL_X, TANK_PLAYER_INITIAL_Y, TANK_PLAYER_INITIAL_ANGLE, keyboardInterpreter);
 
 
         AIModuleEntityActorCheating aiModuleTankSpinHack = new AIModuleEntityActorCheating(gameWorld);
@@ -107,20 +115,20 @@ public class GameDriver {
         aiModuleTankSpinHack.setAccuracy(.95);
         aiModuleTankSpinHack.setTurnLefTurnSpeedSpinning(Math.PI / 60);
 
-        AIModuleEntityActorStandard aiModuleEntityActorStandard = new AIModuleEntityActorStandard(gameWorld);
+        AIModuleEntityActorBasic aiModuleEntityActorBasic = new AIModuleEntityActorBasic(gameWorld);
 
         AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
 
-        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, TANK_AI_1_ID, 500, 500, 0); // Angle must be 0 to spin hack properly
+        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, ID_TANK_AI_1, 500, 500, 0); // Angle must be 0 to spin hack properly
 
-        TankAI tankAICheating = new TankAICheating(aiModuleTankSpinHack, TANK_AI_2_ID, 50, AI_TANK_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
+        TankAI tankAICheating = new TankAICheating(aiModuleTankSpinHack, ID_TANK_AI_2, 50, TANK_AI_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
 
-        TankAI tankAICheatingAutoTarget = new TankAI(aiModuleEntityActorStandard, TANK_AI_3_ID, 400, 400, 0); // Angle must be 0 to spin hack properly
+        TankAI tankAICheatingAutoTarget = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_3, 400, 400, 0); // Angle must be 0 to spin hack properly
 
-        gameWorld.addEntity(tankPlayer);
-        gameWorld.addEntity(tankAITestDummy);
-        gameWorld.addEntity(tankAICheating);
-        gameWorld.addEntity(tankAICheatingAutoTarget);
+        gameWorld.addEntityToQueueForWorld(tankPlayer);
+        gameWorld.addEntityToQueueForWorld(tankAITestDummy);
+        gameWorld.addEntityToQueueForWorld(tankAICheating);
+        gameWorld.addEntityToQueueForWorld(tankAICheatingAutoTarget);
 
     }
 
@@ -131,18 +139,39 @@ public class GameDriver {
      */
     private boolean updateGame() {
         for (Entity entity : gameWorld.getEntitiesFast()) {
+
+            // Movement of Dynamic entities
             if (entity instanceof EntityDynamic) {
                 ((EntityDynamic) entity).doActionComplete(gameWorld);
-
             }
+
 
             // TODO BETTER SOLUTION PLS
             runGameView.setSpriteLocationAndAngle(entity);
-
         }
-        gameWorld.pushEntitiesFromQueueToWorld();
+
+        collisionDetector.run();
+        System.out.println();
+
+        gameWorld.pushEntitiesFromQueueForWorldToWorld();
+        gameWorld.popEntitiesFromQueueRemoveFromWorld();
         return true;
     }
+
+    private void initializeWWalls(GameWorld gameWorld) {
+        List<WallInformation> wallInformationList = WallInformation.readWalls();
+        for (WallInformation wallInformation : wallInformationList) {
+
+            gameWorld.addEntityToQueueForWorld(new Wall(
+                    ID_WALL_STANDARD + gameWorld.getUniqueNumberForId(),
+                    wallInformation.getX(),
+                    wallInformation.getY(),
+                    0,
+                    wallInformation.getImageFile()
+            ));
+        }
+    }
+
 
     /**
      * resetGame is called at the end of the game once the gameplay loop exits. This should clear any existing data from

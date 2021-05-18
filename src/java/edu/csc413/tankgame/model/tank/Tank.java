@@ -3,10 +3,10 @@ package edu.csc413.tankgame.model.tank;
 import edu.csc413.tankgame.Constants;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
-import edu.csc413.tankgame.model.ShellStandard;
+import edu.csc413.tankgame.model.shell.ShellStandard;
 
-import static edu.csc413.tankgame.Constants.IMAGE_TANK_AI;
-import static edu.csc413.tankgame.Constants.SHELL_STANDARD_ID;
+import static edu.csc413.tankgame.Constants.*;
+import static edu.csc413.tankgame.Constants.TANK_X_UPPER_BOUND;
 
 /**
  * Entity class representing all tanks in the game.
@@ -22,20 +22,29 @@ public abstract class Tank extends EntityActor {
         super(id, x, y, angle, IMAGE_TANK_AI);
     }
 
-    protected void activatePrimaryAction(GameWorld gameWorld) {
-        if (canActivatePrimaryAction()) {
-            gameWorld.addEntityToQueue(new ShellStandard(SHELL_STANDARD_ID, getShellX(), getShellY(), getShellAngle(), this));
+    protected void ActivateActionPrimary(GameWorld gameWorld) {
+        long number = gameWorld.getUniqueNumberForId();
+
+        if (canActivateActionPrimary()) {
+            gameWorld.addEntityToQueueForWorld(
+                    new ShellStandard(
+                            ID_SHELL_STANDARD + number,
+                            getShellX(),
+                            getShellY(),
+                            getShellAngle(),
+                            this)
+            );
         }
     }
 
-    protected void activateSecondaryAction(GameWorld gameWorld) {
+    protected void ActivateActionSecondary(GameWorld gameWorld) {
     }
 
-    protected void activateTertiaryAction(GameWorld gameWorld) {
+    protected void ActivateActionTertiary(GameWorld gameWorld) {
     }
+    // is created by this tank. It needs a slight offset so it appears from the front of the tank,
 
     // The following methods will be useful for determining where a shell should be spawned when it
-    // is created by this tank. It needs a slight offset so it appears from the front of the tank,
     // even if the tank is rotated. The shell should have the same angle as the tank.
 
     private double getShellX() {
@@ -51,15 +60,37 @@ public abstract class Tank extends EntityActor {
     }
 
     private void doTankOverhead() {
-
-
+        // TODO: SOMETHING MIGHT BE ADDED HERE IDK...
     }
 
     @Override
-    public void doActionEntityActor(GameWorld gameWorld) {
+    protected void boundaryHandler(GameWorld gameWorld) {
+        if (this.getY() <= TANK_Y_LOWER_BOUND) {
+            this.y = TANK_Y_LOWER_BOUND;
+        } else if (this.getY() >= TANK_Y_UPPER_BOUND) {
+            this.y = TANK_Y_UPPER_BOUND;
+        }
+        if (this.getX() <= TANK_X_LOWER_BOUND) {
+            this.x = TANK_X_LOWER_BOUND;
+        } else if (this.getX() >= TANK_X_UPPER_BOUND) {
+            this.x = TANK_X_UPPER_BOUND;
+        }
+    }
+
+    @Override
+    protected void doActionEntityActor(GameWorld gameWorld) {
         doTankOverhead();
         doActionTank(gameWorld);
     }
 
     protected abstract void doActionTank(GameWorld gameWorld);
+
+    @Override
+    public double getWidth() {
+        return TANK_WIDTH;
+    }
+    @Override
+    public double getHeight() {
+        return TANK_HEIGHT;
+    }
 }

@@ -95,10 +95,10 @@ public class RunGameView extends JPanel {
     public void setSpriteLocationAndAngle(Entity entity) {
 
         synchronized (spritesById) {
-            if (!spritesById.containsKey(entity.getID())) {
-                throw new RuntimeException("No sprite with id '" + entity.getID() + "' was added. addSprite must be called first.");
+            if (!spritesById.containsKey(entity.getId())) {
+                throw new RuntimeException("No sprite with id '" + entity.getId() + "' was added. addSprite must be called first.");
             }
-            spritesById.get(entity.getID()).setLocationAndAngle(entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
+            spritesById.get(entity.getId()).setLocationAndAngle(entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
         }
     }
 
@@ -137,7 +137,6 @@ public class RunGameView extends JPanel {
                 }
             }
         }
-
         g.drawImage(worldImage, 0, 0, null);
     }
 }

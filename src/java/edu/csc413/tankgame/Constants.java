@@ -13,23 +13,24 @@ public class Constants {
     public static final double WALL_WIDTH = 32.0;
     public static final double WALL_HEIGHT = 32.0;
 
-    public static final String TANK_PLAYER_ID = "tank-player";
-    public static final String TANK_AI_1_ID = "tank-ai-1";
-    public static final String TANK_AI_2_ID = "tank-ai-2";
-    public static final String TANK_AI_3_ID = "tank-ai-3";
-    public static final String SHELL_STANDARD_ID = "shell-standard-shell";
+    public static final String ID_TANK_PLAYER = "tank-player";
+    public static final String ID_TANK_AI_1 = "tank-ai-1";
+    public static final String ID_TANK_AI_2 = "tank-ai-2";
+    public static final String ID_TANK_AI_3 = "tank-ai-3";
+    public static final String ID_SHELL_STANDARD = "shell-standard-shell";
+    public static final String ID_WALL_STANDARD = "wall-standard-shell";
 
-    public static final double PLAYER_TANK_INITIAL_X = 250.0;
-    public static final double PLAYER_TANK_INITIAL_Y = 200.0;
-    public static final double PLAYER_TANK_INITIAL_ANGLE = Math.toRadians(0.0);
+    public static final double TANK_PLAYER_INITIAL_X = 250.0;
+    public static final double TANK_PLAYER_INITIAL_Y = 200.0;
+    public static final double TANK_PLAYER_INITIAL_ANGLE = Math.toRadians(0.0);
 
-    public static final double AI_TANK_1_INITIAL_X = 700.0;
-    public static final double AI_TANK_1_INITIAL_Y = 500.0;
-    public static final double AI_TANK_1_INITIAL_ANGLE = Math.toRadians(180.0);
+    public static final double TANK_AI_1_INITIAL_X = 700.0;
+    public static final double TANK_AI_1_INITIAL_Y = 500.0;
+    public static final double TANK_AI_1_INITIAL_ANGLE = Math.toRadians(180.0);
 
-    public static final double AI_TANK_2_INITIAL_X = 700.0;
-    public static final double AI_TANK_2_INITIAL_Y = 200.0;
-    public static final double AI_TANK_2_INITIAL_ANGLE = Math.toRadians(180.0);
+    public static final double TANK_AI_2_INITIAL_X = 700.0;
+    public static final double TANK_AI_2_INITIAL_Y = 200.0;
+    public static final double TANK_AI_2_INITIAL_ANGLE = Math.toRadians(180.0);
 
     public static final double TANK_X_LOWER_BOUND = 30.0;
     public static final double TANK_X_UPPER_BOUND = 924.0;

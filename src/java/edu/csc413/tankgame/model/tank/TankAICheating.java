@@ -26,7 +26,6 @@ package edu.csc413.tankgame.model.tank;
 
 import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActor;
-import edu.csc413.tankgame.model.ai.AIModuleEntityActorStandard;
 
 import static edu.csc413.tankgame.Constants.IMAGE_TANK_AI;
 
@@ -37,7 +36,7 @@ public class TankAICheating extends TankAI {
 
     public TankAICheating(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image) {
         super(aiModuleEntityActor, id, x, y, angle, image);
-        this.enableCheating(); // The only difference compared to TankAi
+        this.enableCheating();
     }
 
     public TankAICheating(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle) {
@@ -45,31 +44,31 @@ public class TankAICheating extends TankAI {
     }
 
     /**
-     * Bypass checks and inject custom movement/turn speed
+     * Bypass checks and inject custom movement/turn speed because this object is cheating...
      *
      * @param gameWorld
      */
     @Override
-    protected void doActionTankAIStandard(GameWorld gameWorld) {
+    protected void doActionTankAI(GameWorld gameWorld) {
         aiModuleEntityActor.think(this);
         moveForward(aiModuleEntityActor.getMoveForwardMovementSpeed());
         moveBackward(aiModuleEntityActor.getMoveBackwardMovementSpeed());
         turnLeft(aiModuleEntityActor.getTurnLeftTurnSpeed());
         turnRight(aiModuleEntityActor.getTurnRightTurnSpeed());
 
-        if (aiModuleEntityActor.shouldActivatePrimaryAction()) {
-            this.activatePrimaryAction(gameWorld);
+        if (aiModuleEntityActor.shouldActivateActionPrimary()) {
+            this.ActivateActionPrimary(gameWorld);
         }
-        if (aiModuleEntityActor.shouldActivateSecondaryAction()) {
-            this.activateSecondaryAction(gameWorld);
+        if (aiModuleEntityActor.shouldActivateActionSecondary()) {
+            this.ActivateActionSecondary(gameWorld);
         }
-        if (aiModuleEntityActor.shouldActivateTertiaryAction()) {
-            this.activateTertiaryAction(gameWorld);
+        if (aiModuleEntityActor.shouldActivateActionTertiary()) {
+            this.ActivateActionTertiary(gameWorld);
         }
     }
 
     @Override
-    public void doActionTank(GameWorld gameWorld) {
-        doActionTankAIStandard(gameWorld);
+    protected void doActionTank(GameWorld gameWorld) {
+        doActionTankAI(gameWorld);
     }
 }

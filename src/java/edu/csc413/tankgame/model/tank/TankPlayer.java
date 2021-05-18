@@ -46,7 +46,7 @@ public class TankPlayer extends Tank {
     }
 
     @Override
-    public void doActionTank(GameWorld gameWorld) {
+    protected void doActionTank(GameWorld gameWorld) {
 
 //        System.out.println(this.getAngleRelativeToWorld());
 //        System.out.println(this.getAngleRadBetweenLineOfSightAndEntity(gameWorld.getEntity(TANK_AI_1_ID)));
@@ -63,19 +63,15 @@ public class TankPlayer extends Tank {
         }
         if (keyboardInterpreter.downPressed()) {
             this.moveBackward(Constants.TANK_MOVEMENT_SPEED);
-//            System.out.println("Down");
         }
         if (keyboardInterpreter.leftPressed()) {
             this.turnLeft(Constants.TANK_TURN_SPEED);
-//            System.out.println("Left");
         }
         if (keyboardInterpreter.rightPressed()) {
             this.turnRight(Constants.TANK_TURN_SPEED);
-//            System.out.println("Right");
         }
         if (keyboardInterpreter.actionPressed()) {
-//            System.out.println("ACTION");
-            this.activatePrimaryAction(gameWorld);
+            this.ActivateActionPrimary(gameWorld);
         }
 
         // DEBUGGING GARBAGE

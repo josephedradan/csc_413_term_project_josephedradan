@@ -27,7 +27,7 @@ package edu.csc413.tankgame.model.ai;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
 
-import static edu.csc413.tankgame.Constants.TANK_PLAYER_ID;
+import static edu.csc413.tankgame.Constants.*;
 
 public class AIModuleEntityActorCheating extends AIModuleEntityActor {
 
@@ -43,15 +43,18 @@ public class AIModuleEntityActorCheating extends AIModuleEntityActor {
 
 
     protected void spinHack(EntityActor entityActor) {
-        if (entityActor.getY() <= 100) {
+
+        // Y is less than Low bound then move down
+        if (entityActor.getY() <= TANK_Y_LOWER_BOUND) {
             moveDown = true;
-        } else if (entityActor.getY() >= 800) {
+        } else if (entityActor.getY() >= TANK_Y_UPPER_BOUND) {
             moveDown = false;
         }
 
-        if (entityActor.getX() <= 100) {
+        // X is less than low bound then move right
+        if (entityActor.getX() <= TANK_X_LOWER_BOUND) {
             moveRight = true;
-        } else if (entityActor.getX() >= 668) {
+        } else if (entityActor.getX() >= TANK_X_UPPER_BOUND) {
             moveRight = false;
         }
 
@@ -103,21 +106,13 @@ public class AIModuleEntityActorCheating extends AIModuleEntityActor {
      */
     @Override
     protected void thinkMove(EntityActor entityActor) {
+        enableMoveAll();
         spinHack(entityActor);
     }
 
     @Override
     protected void thinkAction(EntityActor entityActor) {
-
-        if (entityActor.checkIfInLineOfSightFastUsingVectors(gameWorld.getEntity(TANK_PLAYER_ID), accuracy)) {
-            boolActivatePrimaryAction = true;
-            boolActivateSecondaryAction = true;
-            boolActivateTertiaryAction = true;
-        } else {
-            boolActivatePrimaryAction = false;
-            boolActivateSecondaryAction = false;
-            boolActivateTertiaryAction = false;
-        }
+        activateActionsWhenInLineOfSight(entityActor);
     }
 
     public void setTurnLefTurnSpeedSpinning(double turnLefTurnSpeedSpinning) {
@@ -185,5 +180,5 @@ public class AIModuleEntityActorCheating extends AIModuleEntityActor {
 //        turnLeft(Math.PI / 120);
 //
 //        if (checkIfInLineOfSightFastUsingVectors(gameWorld.getEntity(TANK_PLAYER_ID),.999)) {
-//            this.activatePrimaryAction(gameWorld);
+//            this.ActivateActionPrimary(gameWorld);
 //        }

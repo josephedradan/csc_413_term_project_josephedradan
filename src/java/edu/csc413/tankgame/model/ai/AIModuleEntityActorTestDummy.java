@@ -24,12 +24,8 @@
 
 package edu.csc413.tankgame.model.ai;
 
-import edu.csc413.tankgame.model.Entity;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
-
-import static edu.csc413.tankgame.Constants.TANK_PLAYER_ID;
-import static edu.csc413.tankgame.Constants.TANK_TURN_SPEED;
 
 /**
  * A Literal testing AI

@@ -24,11 +24,11 @@
 
 package edu.csc413.tankgame.model.ai;
 
-import edu.csc413.tankgame.model.Entity;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
 
 import static edu.csc413.tankgame.Constants.AI_ACCURACY;
+import static edu.csc413.tankgame.Constants.ID_TANK_PLAYER;
 
 public abstract class AIModuleEntityActor extends AIModule {
 
@@ -39,8 +39,20 @@ public abstract class AIModuleEntityActor extends AIModule {
         super(gameWorld);
     }
 
+    protected void activateActionsWhenInLineOfSight(EntityActor entityActor){
+        if (entityActor.checkIfInLineOfSightFastUsingVectors(gameWorld.getEntity(ID_TANK_PLAYER), accuracy)) {
+            boolActivateActionPrimary = true;
+            boolActivateActionSecondary = true;
+            boolActivateActionTertiary = true;
+        }
+    }
+    protected void activateActionPrimaryWhenInLineOfSight(EntityActor entityActor){
+        if (entityActor.checkIfInLineOfSightFastUsingVectors(gameWorld.getEntity(ID_TANK_PLAYER), accuracy)) {
+            boolActivateActionPrimary = true;
+        }
+    }
+
     public void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
     }
-
 }

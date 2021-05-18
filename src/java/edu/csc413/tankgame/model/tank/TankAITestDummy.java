@@ -26,7 +26,6 @@ package edu.csc413.tankgame.model.tank;
 
 import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActor;
-import edu.csc413.tankgame.model.ai.AIModuleEntityActorStandard;
 
 import static edu.csc413.tankgame.Constants.IMAGE_TANK_AI;
 
@@ -40,7 +39,8 @@ public class TankAITestDummy extends TankAI {
         this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI);
     }
 
-    protected void doActionTankAIStandard(GameWorld gameWorld) {
+    protected void doActionTankAI(GameWorld gameWorld) {
+        // TODO ADD ANYTHING TO TEST
 //        aiModuleEntityActor.think(this);
 //
 //        if (aiModuleEntityActor.shouldMoveForward()) {
@@ -56,14 +56,14 @@ public class TankAITestDummy extends TankAI {
 //            turnRight(TANK_TURN_SPEED);
 //        }
 //
-//        if (aiModuleEntityActor.shouldActivatePrimaryAction()) {
-//            this.activatePrimaryAction(gameWorld);
+//        if (aiModuleEntityActor.shouldActivateActionPrimary()) {
+//            this.ActivateActionPrimary(gameWorld);
 //        }
-//        if (aiModuleEntityActor.shouldActivateSecondaryAction()) {
-//            this.activateSecondaryAction(gameWorld);
+//        if (aiModuleEntityActor.shouldActivateActionSecondary()) {
+//            this.ActivateActionSecondary(gameWorld);
 //        }
-//        if (aiModuleEntityActor.shouldActivateTertiaryAction()) {
-//            this.activateTertiaryAction(gameWorld);
+//        if (aiModuleEntityActor.shouldActivateActionTertiary()) {
+//            this.ActivateActionTertiary(gameWorld);
 //        }
     }
 }

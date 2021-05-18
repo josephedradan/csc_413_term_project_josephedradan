@@ -26,27 +26,29 @@ package edu.csc413.tankgame.model;
 
 import static edu.csc413.tankgame.Constants.*;
 
+/**
+ * EntityActor is an entity that is dynamic but can be thought of as an animate object
+ */
 public abstract class EntityActor extends EntityDynamic {
 
     /*
     TODO: THE BELOW SHOULD VARY PER WEAPON TYPE
-
     */
 
-    // Cool Down for activatePrimaryAction
-    protected int activatePrimaryActionCoolDownPerDoAction = COOL_DOWN_PRIMARY_ACTION;
-    private int activatePrimaryActionCoolDownCount = 0;
-    private boolean boolActivatePrimaryAction;
+    // Cool Down for ActivateActionPrimary
+    protected int ActivateActionPrimaryCoolDownPerDoAction = COOL_DOWN_PRIMARY_ACTION;
+    private int ActivateActionPrimaryCoolDownCount = 0;
+    private boolean boolActivateActionPrimary;
 
-    // Cool Down for activateSecondaryAction
-    protected int activateSecondaryActionCoolDownPerDoAction = COOL_DOWN_SECONDARY_ACTION;
-    private int activateSecondaryActionCoolDownCount = 0;
-    private boolean boolActivateSecondaryAction;
+    // Cool Down for ActivateActionSecondary
+    protected int ActivateActionSecondaryCoolDownPerDoAction = COOL_DOWN_SECONDARY_ACTION;
+    private int ActivateActionSecondaryCoolDownCount = 0;
+    private boolean boolActivateActionSecondary;
 
-    // Cool Down for activateTertiaryAction
-    protected int activateTertiaryActionCoolDownPerDoAction = COOL_DOWN_TERTIARY_ACTION;
-    private int activateTertiaryActionCoolDownCount = 0;
-    private boolean boolActivateTertiaryAction;
+    // Cool Down for ActivateActionTertiary
+    protected int ActivateActionTertiaryCoolDownPerDoAction = COOL_DOWN_TERTIARY_ACTION;
+    private int ActivateActionTertiaryCoolDownCount = 0;
+    private boolean boolActivateActionTertiary;
 
     public EntityActor(String id, double x, double y, double angle, String image) {
         super(id, x, y, angle, image);
@@ -58,89 +60,89 @@ public abstract class EntityActor extends EntityDynamic {
      */
 
     /**
-     * Ask if you canActivatePrimaryAction
+     * Ask if you canActivateActionPrimary
      *
-     * @return if you canActivatePrimaryAction
+     * @return if you canActivateActionPrimary
      */
-    protected boolean canActivatePrimaryAction() {
-        if (!boolActivatePrimaryAction) {
+    protected boolean canActivateActionPrimary() {
+        if (!boolActivateActionPrimary) {
             return false;
         }
-        activatePrimaryActionCoolDownCount = activatePrimaryActionCoolDownPerDoAction;
-        boolActivatePrimaryAction = false;
+        ActivateActionPrimaryCoolDownCount = ActivateActionPrimaryCoolDownPerDoAction;
+        boolActivateActionPrimary = false;
         return true;
     }
 
     /**
-     * Ask if you canActivateSecondaryAction
+     * Ask if you canActivateActionSecondary
      *
-     * @return if you canActivateSecondaryAction
+     * @return if you canActivateActionSecondary
      */
-    protected boolean canActivateSecondaryAction() {
-        if (!boolActivateSecondaryAction) {
+    protected boolean canActivateActionSecondary() {
+        if (!boolActivateActionSecondary) {
             return false;
         }
-        activateSecondaryActionCoolDownCount = activateSecondaryActionCoolDownPerDoAction;
-        boolActivateSecondaryAction = false;
+        ActivateActionSecondaryCoolDownCount = ActivateActionSecondaryCoolDownPerDoAction;
+        boolActivateActionSecondary = false;
         return true;
     }
 
     /**
-     * Ask if you canActivateTertiaryAction
+     * Ask if you canActivateActionTertiary
      *
-     * @return if you canActivateTertiaryAction
+     * @return if you canActivateActionTertiary
      */
-    protected boolean canActivateTertiaryAction() {
-        if (!boolActivateTertiaryAction) {
+    protected boolean canActivateActionTertiary() {
+        if (!boolActivateActionTertiary) {
             return false;
         }
-        activateTertiaryActionCoolDownCount = activateTertiaryActionCoolDownPerDoAction;
-        boolActivateTertiaryAction = false;
+        ActivateActionTertiaryCoolDownCount = ActivateActionTertiaryCoolDownPerDoAction;
+        boolActivateActionTertiary = false;
         return true;
     }
 
     // Implementation of the below is done by the subclasses
-    protected abstract void activatePrimaryAction(GameWorld gameWorld);
+    protected abstract void ActivateActionPrimary(GameWorld gameWorld);
 
-    protected abstract void activateSecondaryAction(GameWorld gameWorld);
+    protected abstract void ActivateActionSecondary(GameWorld gameWorld);
 
-    protected abstract void activateTertiaryAction(GameWorld gameWorld);
+    protected abstract void ActivateActionTertiary(GameWorld gameWorld);
 
     /**
      * Does the Cool Down overhead
      */
     private void doOverheadCoolDown() {
-        if (activatePrimaryActionCoolDownCount <= 0) {
-            boolActivatePrimaryAction = true;
+        if (ActivateActionPrimaryCoolDownCount <= 0) {
+            boolActivateActionPrimary = true;
         } else {
-            --activatePrimaryActionCoolDownCount;
+            --ActivateActionPrimaryCoolDownCount;
         }
-        if (activateSecondaryActionCoolDownCount <= 0) {
-            boolActivateSecondaryAction = true;
+        if (ActivateActionSecondaryCoolDownCount <= 0) {
+            boolActivateActionSecondary = true;
         } else {
-            --activateSecondaryActionCoolDownCount;
+            --ActivateActionSecondaryCoolDownCount;
         }
-        if (activateTertiaryActionCoolDownCount <= 0) {
-            boolActivateTertiaryAction = true;
+        if (ActivateActionTertiaryCoolDownCount <= 0) {
+            boolActivateActionTertiary = true;
         } else {
-            --activateTertiaryActionCoolDownCount;
+            --ActivateActionTertiaryCoolDownCount;
         }
     }
 
     @Override
-    public void doActionEntityDynamic(GameWorld gameWorld) {
+    protected void doActionEntityDynamic(GameWorld gameWorld) {
         doOverheadCoolDown();
         doActionEntityActor(gameWorld);
     }
 
-    public abstract void doActionEntityActor(GameWorld gameWorld);
+    protected abstract void doActionEntityActor(GameWorld gameWorld);
 
     /**
      * Since i'm limited on time to create really good game design, i'm stuck with toggling cheats.
      */
     protected void enableCheating() {
-        activatePrimaryActionCoolDownPerDoAction = 0;
-        activateSecondaryActionCoolDownPerDoAction = 0;
-        activateTertiaryActionCoolDownPerDoAction = 0;
+        ActivateActionPrimaryCoolDownPerDoAction = 0;
+        ActivateActionSecondaryCoolDownPerDoAction = 0;
+        ActivateActionTertiaryCoolDownPerDoAction = 0;
     }
 }

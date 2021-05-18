@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
  * shells, and provides access to this information for any code that needs it (such as GameDriver or entity classes).
  */
 public class GameWorld {
+
+    private static long uniqueNumberForIDCounter = 0;
+
     // TODO: Implement. There's a lot of information the GameState will need to store to provide contextual information.
     //       Add whatever instance variables, constructors, and methods are needed.
 
@@ -18,12 +21,14 @@ public class GameWorld {
     private final HashMap<String, Entity> entityHashMap;
     private final RunGameView runGameView;
 
-    private final LinkedList<Entity> entityLinkedList;
+    private final LinkedList<Entity> entityLinkedListQueueForWorld;
+    private final LinkedList<Entity> entityLinkedListQueueRemoveFromWorld;
 
     public GameWorld(RunGameView runGameView) {
         this.runGameView = runGameView;
         entityHashMap = new HashMap<>();
-        entityLinkedList = new LinkedList<>();
+        entityLinkedListQueueForWorld = new LinkedList<>();
+        entityLinkedListQueueRemoveFromWorld = new LinkedList<>();
     }
 
     /**
@@ -48,21 +53,32 @@ public class GameWorld {
 
     /**
      * Adds a new entity to the game.
+     * "Too powerful to be left out public..."
      */
-    public void addEntity(Entity entity) {
-        entityHashMap.put(entity.getID(), entity);
-        runGameView.addSprite(entity.getID(), entity.getImage(), entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
+    private void addEntity(Entity entity) {
+        entityHashMap.put(entity.getId(), entity);
+        runGameView.addSprite(entity.getId(), entity.getImage(), entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
 
     }
 
-    public void addEntityToQueue(Entity entity) {
-//        System.out.println(entity.getID());
-        entityLinkedList.add(entity);
+    public void addEntityToQueueForWorld(Entity entity) {
+//        System.out.println(entity.getId());
+        entityLinkedListQueueForWorld.add(entity);
     }
 
-    public void pushEntitiesFromQueueToWorld() {
-        while (!entityLinkedList.isEmpty()) {
-            addEntity(entityLinkedList.pop());
+    public void pushEntitiesFromQueueForWorldToWorld() {
+        while (!entityLinkedListQueueForWorld.isEmpty()) {
+            addEntity(entityLinkedListQueueForWorld.pop());
+        }
+    }
+
+    public void addEntityToQueueRemoveFromWorld(Entity entity) {
+        entityLinkedListQueueRemoveFromWorld.add(entity);
+    }
+
+    public void popEntitiesFromQueueRemoveFromWorld() {
+        while (!entityLinkedListQueueRemoveFromWorld.isEmpty()) {
+            removeEntity(entityLinkedListQueueRemoveFromWorld.pop());
         }
     }
 
@@ -75,8 +91,18 @@ public class GameWorld {
 
     /**
      * Removes the entity with the specified id from the game.
+     * "Too powerful to be left out public..."
      */
-    public void removeEntity(String id) {
-        entityHashMap.remove(id);
+    private void removeEntity(Entity entity) {
+//        System.out.println(entity);
+        runGameView.removeSprite(entity.getId());
+        entityHashMap.remove(entity.getId());
+    }
+
+
+    public long getUniqueNumberForId(){
+        long number = uniqueNumberForIDCounter;
+        uniqueNumberForIDCounter++;
+        return number;
     }
 }

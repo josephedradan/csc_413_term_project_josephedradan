@@ -29,4 +29,5 @@ public abstract class EntityStatic extends Entity {
     public EntityStatic(String id, double x, double y, double angle, String image) {
         super(id, x, y, angle, image);
     }
+
 }

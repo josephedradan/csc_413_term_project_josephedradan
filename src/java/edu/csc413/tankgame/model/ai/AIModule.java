@@ -45,9 +45,9 @@ public abstract class AIModule {
     protected boolean boolTurnLeft;
     protected boolean boolTurnRight;
 
-    protected boolean boolActivatePrimaryAction;
-    protected boolean boolActivateSecondaryAction;
-    protected boolean boolActivateTertiaryAction;
+    protected boolean boolActivateActionPrimary;
+    protected boolean boolActivateActionSecondary;
+    protected boolean boolActivateActionTertiary;
 
     public AIModule(GameWorld gameWorld) {
         resetBrain();
@@ -58,11 +58,9 @@ public abstract class AIModule {
         return moveForwardMovementSpeed;
     }
 
-
     public double getMoveBackwardMovementSpeed() {
         return moveBackwardMovementSpeed;
     }
-
 
     public double getTurnLeftTurnSpeed() {
         return turnLefTurnSpeed;
@@ -71,7 +69,6 @@ public abstract class AIModule {
     public double getTurnRightTurnSpeed() {
         return turnRightTurnSpeed;
     }
-
 
     public boolean shouldMoveForward() {
         return boolMoveForward;
@@ -89,16 +86,29 @@ public abstract class AIModule {
         return boolTurnRight;
     }
 
-    public boolean shouldActivatePrimaryAction() {
-        return boolActivatePrimaryAction;
+    public boolean shouldActivateActionPrimary() {
+        return boolActivateActionPrimary;
     }
 
-    public boolean shouldActivateSecondaryAction() {
-        return boolActivateSecondaryAction;
+    public boolean shouldActivateActionSecondary() {
+        return boolActivateActionSecondary;
     }
 
-    public boolean shouldActivateTertiaryAction() {
-        return boolActivateTertiaryAction;
+    public boolean shouldActivateActionTertiary() {
+        return boolActivateActionTertiary;
+    }
+
+    protected void enableMoveAll() {
+        boolMoveForward = true;
+        boolMoveBackward = true;
+        boolTurnLeft = true;
+        boolTurnRight = true;
+    }
+
+    protected void enableActionAll() {
+        boolActivateActionPrimary = true;
+        boolActivateActionSecondary = true;
+        boolActivateActionTertiary = true;
     }
 
     /**
@@ -141,8 +151,8 @@ public abstract class AIModule {
         boolTurnLeft = false;
         boolTurnRight = false;
 
-        boolActivatePrimaryAction = false;
-        boolActivateSecondaryAction = false;
-        boolActivateTertiaryAction = false;
+        boolActivateActionPrimary = false;
+        boolActivateActionSecondary = false;
+        boolActivateActionTertiary = false;
     }
 }

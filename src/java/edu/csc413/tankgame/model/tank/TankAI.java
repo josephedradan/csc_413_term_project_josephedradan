@@ -44,7 +44,7 @@ public class TankAI extends Tank {
     }
 
 
-    protected void doActionTankAIStandard(GameWorld gameWorld) {
+    protected void doActionTankAI(GameWorld gameWorld) {
         aiModuleEntityActor.think(this);
 
         if (aiModuleEntityActor.shouldMoveForward()) {
@@ -60,20 +60,20 @@ public class TankAI extends Tank {
             turnRight(TANK_TURN_SPEED);
         }
 
-        if (aiModuleEntityActor.shouldActivatePrimaryAction()) {
-            this.activatePrimaryAction(gameWorld);
+        if (aiModuleEntityActor.shouldActivateActionPrimary()) {
+            this.ActivateActionPrimary(gameWorld);
         }
-        if (aiModuleEntityActor.shouldActivateSecondaryAction()) {
-            this.activateSecondaryAction(gameWorld);
+        if (aiModuleEntityActor.shouldActivateActionSecondary()) {
+            this.ActivateActionSecondary(gameWorld);
         }
-        if (aiModuleEntityActor.shouldActivateTertiaryAction()) {
-            this.activateTertiaryAction(gameWorld);
+        if (aiModuleEntityActor.shouldActivateActionTertiary()) {
+            this.ActivateActionTertiary(gameWorld);
         }
     }
 
     @Override
-    public void doActionTank(GameWorld gameWorld) {
-        doActionTankAIStandard(gameWorld);
+    protected void doActionTank(GameWorld gameWorld) {
+        doActionTankAI(gameWorld);
     }
 }
 

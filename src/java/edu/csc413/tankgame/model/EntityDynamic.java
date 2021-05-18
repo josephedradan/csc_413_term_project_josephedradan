@@ -25,7 +25,11 @@
 package edu.csc413.tankgame.model;
 
 import static edu.csc413.tankgame.Constants.TANK_TURN_SPEED;
+import static edu.csc413.tankgame.Constants.TANK_Y_LOWER_BOUND;
 
+/**
+ * EntityDynamic is an entity that can move...
+ */
 public abstract class EntityDynamic extends Entity {
 
 
@@ -112,6 +116,16 @@ public abstract class EntityDynamic extends Entity {
     }
 
     /**
+     * A Handler for the boundary handlers
+     * TODO: MAYBE SOMETHING ADVANCE CAN BE ADDED HERE IDK....
+     */
+    private void boundaryHandlerHandler(GameWorld gameWorld){
+        boundaryHandler(gameWorld);
+    }
+
+    protected abstract void boundaryHandler(GameWorld gameWorld);
+
+    /**
      * All EntityDynamic can doActionComplete, even if the details of their doActionComplete logic may vary based on the specific
      * type of EntityDynamic.
      * The default behavior is to call doActionEntityDynamic.
@@ -120,15 +134,15 @@ public abstract class EntityDynamic extends Entity {
      * @param gameWorld The game world
      */
     public void doActionComplete(GameWorld gameWorld) {
-        // TODO: CAN PUT OVERHEAD HERE
+        boundaryHandlerHandler(gameWorld);  // Overhead function
         doActionEntityDynamic(gameWorld);
     }
 
     /**
-     * This is the actual action of a EntityDynamic
+     * This is the actual action of the EntityDynamic
      *
      * @param gameWorld The game world
      */
-    public abstract void doActionEntityDynamic(GameWorld gameWorld);
+    protected abstract void doActionEntityDynamic(GameWorld gameWorld);
 
 }

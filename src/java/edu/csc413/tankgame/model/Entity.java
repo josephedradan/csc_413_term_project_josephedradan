@@ -30,7 +30,7 @@ public abstract class Entity {
         this.image = image;
     }
 
-    public String getID() {
+    public String getId() {
         return id;
     }
 
@@ -361,6 +361,10 @@ public abstract class Entity {
 
         return numerator / denominator;
     }
+
+
+    public abstract double getWidth();
+    public abstract double getHeight();
 
 
     public void setImage(String image) {
