@@ -53,7 +53,7 @@ package edu.csc413.tankgame;
 //        final long startTime = System.currentTimeMillis();
 //        for (int i = 0; i < length; i++) {
 //            for (Entity entity : gameWorld.getEntities()) {
-//                entity.getTypeId();
+//                entity.getID();
 //            }
 //        }
 //        final long endTime = System.currentTimeMillis();
@@ -63,7 +63,7 @@ package edu.csc413.tankgame;
 //        final long startTime2 = System.currentTimeMillis();
 //        for (int i = 0; i < length; i++) {
 //            for (Entity entity : gameWorld.getEntitiesFast()) {
-//                entity.getTypeId();
+//                entity.getID();
 //            }
 //        }
 //        final long endTim2 = System.currentTimeMillis();
@@ -73,7 +73,7 @@ package edu.csc413.tankgame;
 //        final long startTime3 = System.currentTimeMillis();
 //        for (int i = 0; i < length; i++) {
 //            for (Entity entity : gameWorld.getEntitiesSlow()) {
-//                entity.getTypeId();
+//                entity.getID();
 //            }
 //        }
 //        final long endTim3 = System.currentTimeMillis();

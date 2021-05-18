@@ -3,7 +3,7 @@ package edu.csc413.tankgame.model;
 import java.util.ArrayList;
 
 /**
- * A general concept for an entity in the Tank Game. This includes everything that can act or be interacted with, such
+ * A general concept for an entity in the Tank Game. This includes everything that can doActionComplete or be interacted with, such
  * as tanks, shells, walls, power ups, etc.
  */
 public abstract class Entity {
@@ -17,21 +17,21 @@ public abstract class Entity {
 
     private String image;
 
-    private final String typeId;
+    private final String id;
     protected double x;
     protected double y;
-    protected double angle;
+    protected double angleRelativeToWorld; // In radians
 
-    public Entity(String typeId, double x, double y, double angle, String image) {
-        this.typeId = typeId;
+    public Entity(String id, double x, double y, double angleRelativeToWorld, String image) {
+        this.id = id;
         this.x = x;
         this.y = y;
-        this.angle = angle;
+        this.angleRelativeToWorld = angleRelativeToWorld;
         this.image = image;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getID() {
+        return id;
     }
 
     public double getX() {
@@ -42,8 +42,8 @@ public abstract class Entity {
         return y;
     }
 
-    public double getAngle() {
-        return angle;
+    public double getAngleRelativeToWorld() {
+        return angleRelativeToWorld;
     }
 
     /**
@@ -74,10 +74,10 @@ public abstract class Entity {
      *
      * @return Quadrant
      */
-    public short getQuadrantBasedOnAngle() {
+    public short getQuadrantBasedOnAngleRad() {
 
-        double xThisRelative = Math.cos(angle);
-        double yThisRelative = Math.sin(angle);
+        double xThisRelative = Math.cos(angleRelativeToWorld);
+        double yThisRelative = Math.sin(angleRelativeToWorld);
 
         if (xThisRelative >= 0 && yThisRelative >= 0) {
             return 1;
@@ -93,13 +93,13 @@ public abstract class Entity {
     /**
      * Get the b value in b = y -mx
      * Notes:
-     *  This is not as helpful since both the slope and the b value are used.
+     * This is not as helpful since both the slope and the b value are used.
      *
      * @return
      */
-    public double getB() {
-        double xThisRelative = Math.cos(angle);
-        double yThisRelative = Math.sin(angle);
+    public double getBValue() {
+        double xThisRelative = Math.cos(angleRelativeToWorld);
+        double yThisRelative = Math.sin(angleRelativeToWorld);
 
         double slope = yThisRelative / xThisRelative;
         double bThis = (y - (slope * x));
@@ -133,8 +133,8 @@ public abstract class Entity {
     }
 
     /**
-     * Check if this entity has a given entity in line of sight by checking the if the b value for both calculated
-     * y = mx + b values are the same
+     * Check if this entity has a given entity in line of sight by checking if the b value for both calculated
+     * y = mx + b values are the same.
      *
      * @param entity    Entity to check
      * @param tolerance Increments to this entity's angle by a factor of .01 radians
@@ -145,7 +145,7 @@ public abstract class Entity {
         // Use b = y - mx
         // Check if the b value is the same for both lines
 
-        double angleRadStart = angle - ((tolerance / 2) * .01);
+        double angleRadStart = angleRelativeToWorld - ((tolerance / 2) * .01);
 
         for (int i = 0; i < tolerance; i++) {
 
@@ -162,11 +162,11 @@ public abstract class Entity {
             if (Math.round(bThis) == Math.round(bEntityRelativeToThis)) {
                 ArrayList<Integer> integerArrayList = getQuadrantsEntityRelative(entity);
                 for (int j = 0; j < 1; i++) {
-                    if (integerArrayList.get(i) == this.getQuadrantBasedOnAngle()) {
+                    if (integerArrayList.get(i) == this.getQuadrantBasedOnAngleRad()) {
                         return true;
                     }
                 }
-//                if (this.getQuadrantEntityRelative(entity) == this.getQuadrantBasedOnAngle()) {
+//                if (this.getQuadrantEntityRelative(entity) == this.getQuadrantBasedOnAngleRad()) {
 //                    return true;
 //                }
             }
@@ -174,11 +174,19 @@ public abstract class Entity {
         return false;
     }
 
+    /**
+     * Check if this entity has a given entity in line of sight by checking if the b value for this entity in
+     * y = mx + b is within a certain allowed range.
+     *
+     * @param entity
+     * @param differenceAllowed
+     * @return
+     */
     public boolean checkIfInLineOfSightFastUsingLines(Entity entity, int differenceAllowed) {
 
-        double xThisRelativeLow = Math.cos(angle);
-        double yThisRelativeLow = Math.sin(angle);
-        double slope = yThisRelativeLow / xThisRelativeLow;
+        double xThisRelative = Math.cos(angleRelativeToWorld);
+        double yThisRelative = Math.sin(angleRelativeToWorld);
+        double slope = yThisRelative / xThisRelative;
 
         double b = (this.y - (slope * this.x));
 
@@ -193,22 +201,43 @@ public abstract class Entity {
 //            System.out.println(integerArrayList);
 
             for (int i = 0; i < 1; i++) {
-                if (integerArrayList.get(i) == this.getQuadrantBasedOnAngle()) {
-//                    System.out.println(entity.getQuadrantBasedOnAngle());
+                if (integerArrayList.get(i) == this.getQuadrantBasedOnAngleRad()) {
+//                    System.out.println(entity.getQuadrantBasedOnAngleRad());
                     return true;
                 }
             }
 
-//            if (this.getQuadrantsEntityRelative(entity).get(0) == this.getQuadrantBasedOnAngle()) {
+//            if (this.getQuadrantsEntityRelative(entity).get(0) == this.getQuadrantBasedOnAngleRad()) {
 //                return true;
 //            }
 
-//            if (this.getQuadrantEntityRelative(entity) == this.getQuadrantBasedOnAngle()) {
+//            if (this.getQuadrantEntityRelative(entity) == this.getQuadrantBasedOnAngleRad()) {
 //                return true;
 //            }
 
         }
         return false;
+    }
+
+
+    /**
+     * Get Cosine similarity between this entity's line of sight and the given entity
+     *
+     * @param entity
+     * @return
+     */
+    public double getCosineSimilarityBetweenLineOfSightAndEntity(Entity entity) {
+        return getCosineSimilarityBetweenPointAngleAndEntity(this.getAngleRelativeToWorld(), this.getX(), this.getY(), entity);
+    }
+
+    /**
+     * Get angle between this entity's line of sight and the Given entity.
+     *
+     * @param entity
+     * @return
+     */
+    public double getAngleRadBetweenLineOfSightAndEntity(Entity entity) {
+        return Math.acos(getCosineSimilarityBetweenLineOfSightAndEntity(entity));
     }
 
     /**
@@ -219,22 +248,7 @@ public abstract class Entity {
      * @return
      */
     public boolean checkIfInLineOfSightFastUsingVectors(Entity entity, double accuracy) {
-
-        double xThisRelative = Math.cos(angle);
-        double yThisRelative = Math.sin(angle);
-
-        double xEntityRelativeToThis = entity.getX() - this.getX();
-        double yEntityRelativeToThis = entity.getY() - this.getY();
-
-        // Dot product
-        double numerator = (xThisRelative * xEntityRelativeToThis) + (yThisRelative * yEntityRelativeToThis);
-
-        // Multiply Magnitudes
-        double denominator = ((Math.sqrt(Math.pow(xThisRelative, 2) + Math.pow(yThisRelative, 2))) *
-                (Math.sqrt(Math.pow(xEntityRelativeToThis, 2) + Math.pow(yEntityRelativeToThis, 2))
-                ));
-
-        double cosineSimilarity = numerator / denominator;
+        double cosineSimilarity = getCosineSimilarityBetweenLineOfSightAndEntity(entity);
 //        System.out.println(cosineSimilarity);
         if (cosineSimilarity >= accuracy) {
             return true;
@@ -246,6 +260,11 @@ public abstract class Entity {
      * Get the percentage of how close a the given entity is to the quadrant relative to this entity.
      * Notes:
      * Streams are too slow
+     * <p>
+     * Quadrants
+     * Q3  Q4
+     * <p>
+     * Q2  Q1
      *
      * @param entity Entity given
      * @return ArrayList of percentages for each relative quadrant
@@ -314,6 +333,35 @@ public abstract class Entity {
 
         return quadrants;
     }
+
+
+
+    /**
+     * Get Cosine similarity between a point with an angle and the given entity
+     * @param angle
+     * @param x
+     * @param y
+     * @param entity
+     * @return
+     */
+    public static double getCosineSimilarityBetweenPointAngleAndEntity(double angle, double x, double y, Entity entity) {
+        double xThisRelative = Math.cos(angle);
+        double yThisRelative = Math.sin(angle);
+
+        double xEntityRelativeToThis = entity.getX() - x;
+        double yEntityRelativeToThis = entity.getY() - y;
+
+        // Dot product
+        double numerator = (xThisRelative * xEntityRelativeToThis) + (yThisRelative * yEntityRelativeToThis);
+
+        // Multiply Magnitudes
+        double denominator = ((Math.sqrt(Math.pow(xThisRelative, 2) + Math.pow(yThisRelative, 2))) *
+                (Math.sqrt(Math.pow(xEntityRelativeToThis, 2) + Math.pow(yEntityRelativeToThis, 2))
+                ));
+
+        return numerator / denominator;
+    }
+
 
     public void setImage(String image) {
         this.image = image;

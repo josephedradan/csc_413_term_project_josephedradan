@@ -16,6 +16,7 @@ public class Constants {
     public static final String TANK_PLAYER_ID = "tank-player";
     public static final String TANK_AI_1_ID = "tank-ai-1";
     public static final String TANK_AI_2_ID = "tank-ai-2";
+    public static final String TANK_AI_3_ID = "tank-ai-3";
     public static final String SHELL_STANDARD_ID = "shell-standard-shell";
 
     public static final double PLAYER_TANK_INITIAL_X = 250.0;
@@ -43,5 +44,11 @@ public class Constants {
     public static final String IMAGE_TANK_PLAYER = "tank-player.png";
     public static final String IMAGE_TANK_AI = "tank-ai.png";
     public static final String IMAGE_SHELL_STANDARD = "shell.png";
+
+    public static final int COOL_DOWN_PRIMARY_ACTION = 25;
+    public static final int COOL_DOWN_SECONDARY_ACTION = 25;
+    public static final int COOL_DOWN_TERTIARY_ACTION = 25;
+
+    public static final double AI_ACCURACY = .80; // 80 Percent accuracy
 
 }

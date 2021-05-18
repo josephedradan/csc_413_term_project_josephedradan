@@ -1,8 +1,13 @@
 package edu.csc413.tankgame.controller;
 
 import edu.csc413.tankgame.model.*;
-import edu.csc413.tankgame.model.tank.TankAi;
-import edu.csc413.tankgame.model.tank.TankPlayable;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorStandard;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorCheating;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorTestDummy;
+import edu.csc413.tankgame.model.tank.TankAI;
+import edu.csc413.tankgame.model.tank.TankAICheating;
+import edu.csc413.tankgame.model.tank.TankAITestDummy;
+import edu.csc413.tankgame.model.tank.TankPlayer;
 import edu.csc413.tankgame.view.*;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +37,13 @@ public class GameDriver {
         mainView.setScreen(MainView.Screen.START_GAME_SCREEN);
     }
 
-    // Is this an ActionListener? Is called when a button is pressed from the StartMenuView
+    /**
+     * Notes:
+     *  Is this an ActionListener? Is called when a button is pressed from the StartMenuView
+     *
+     * TODO: FIGURE OUT WHAT THIS DOES
+     * @param actionEvent
+     */
     private void startMenuActionPerformed(ActionEvent actionEvent) {
         /*
         Get actionEvent's ActionCommand and see if that command is either START_BUTTON_ACTION_COMMAND
@@ -88,16 +99,28 @@ public class GameDriver {
                 KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
 
-        TankPlayable tankPlayable = new TankPlayable(TANK_PLAYER_ID, PLAYER_TANK_INITIAL_X, PLAYER_TANK_INITIAL_Y, PLAYER_TANK_INITIAL_ANGLE, keyboardInterpreter);
-
-        TankAi tankAi = new TankAi(TANK_AI_1_ID, 900, AI_TANK_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
-
-        TankAi tankAi2 = new TankAi(TANK_AI_2_ID, 50, AI_TANK_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
+        TankPlayer tankPlayer = new TankPlayer(TANK_PLAYER_ID, PLAYER_TANK_INITIAL_X, PLAYER_TANK_INITIAL_Y, PLAYER_TANK_INITIAL_ANGLE, keyboardInterpreter);
 
 
-        gameWorld.addEntity(tankPlayable);
-        gameWorld.addEntity(tankAi);
-        gameWorld.addEntity(tankAi2);
+        AIModuleEntityActorCheating aiModuleTankSpinHack = new AIModuleEntityActorCheating(gameWorld);
+        aiModuleTankSpinHack.setAccuracy(.999);
+        aiModuleTankSpinHack.setAccuracy(.95);
+        aiModuleTankSpinHack.setTurnLefTurnSpeedSpinning(Math.PI / 60);
+
+        AIModuleEntityActorStandard aiModuleEntityActorStandard = new AIModuleEntityActorStandard(gameWorld);
+
+        AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
+
+        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, TANK_AI_1_ID, 500, 500, 0); // Angle must be 0 to spin hack properly
+
+        TankAI tankAICheating = new TankAICheating(aiModuleTankSpinHack, TANK_AI_2_ID, 50, AI_TANK_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
+
+        TankAI tankAICheatingAutoTarget = new TankAI(aiModuleEntityActorStandard, TANK_AI_3_ID, 400, 400, 0); // Angle must be 0 to spin hack properly
+
+        gameWorld.addEntity(tankPlayer);
+        gameWorld.addEntity(tankAITestDummy);
+        gameWorld.addEntity(tankAICheating);
+        gameWorld.addEntity(tankAICheatingAutoTarget);
 
     }
 
@@ -108,8 +131,8 @@ public class GameDriver {
      */
     private boolean updateGame() {
         for (Entity entity : gameWorld.getEntitiesFast()) {
-            if (entity instanceof Dynamic) {
-                ((Dynamic) entity).act(gameWorld);
+            if (entity instanceof EntityDynamic) {
+                ((EntityDynamic) entity).doActionComplete(gameWorld);
 
             }
 

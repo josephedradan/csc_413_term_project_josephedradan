@@ -30,23 +30,27 @@ import edu.csc413.tankgame.model.GameWorld;
 
 import static edu.csc413.tankgame.Constants.*;
 
-public class TankPlayable extends Tank {
+public class TankPlayer extends Tank {
 
     private final KeyboardInterpreter keyboardInterpreter;
 
-    public TankPlayable(String typeId, double x, double y, double angle, String image, KeyboardInterpreter keyboardInterpreter) {
-        super(typeId, x, y, angle, image);
+    public TankPlayer(String id, double x, double y, double angle, String image, KeyboardInterpreter keyboardInterpreter) {
+        super(id, x, y, angle, image);
         this.keyboardInterpreter = keyboardInterpreter;
 
     }
 
-    public TankPlayable(String typeId, double x, double y, double angle, KeyboardInterpreter keyboardInterpreter) {
-        this(typeId, x, y, angle, IMAGE_TANK_PLAYER, keyboardInterpreter);
+    public TankPlayer(String id, double x, double y, double angle, KeyboardInterpreter keyboardInterpreter) {
+        this(id, x, y, angle, IMAGE_TANK_PLAYER, keyboardInterpreter);
 
     }
 
     @Override
-    public void act(GameWorld gameWorld) {
+    public void doActionTank(GameWorld gameWorld) {
+
+//        System.out.println(this.getAngleRelativeToWorld());
+//        System.out.println(this.getAngleRadBetweenLineOfSightAndEntity(gameWorld.getEntity(TANK_AI_1_ID)));
+//        System.out.println(Math.toDegrees(this.getAngleRadBetweenLineOfSightAndEntity(gameWorld.getEntity(TANK_AI_1_ID))));
 
 //        System.out.println(Math.toDegrees(getAngle()));
 //        System.out.println(getAngle());
@@ -64,7 +68,6 @@ public class TankPlayable extends Tank {
         if (keyboardInterpreter.leftPressed()) {
             this.turnLeft(Constants.TANK_TURN_SPEED);
 //            System.out.println("Left");
-
         }
         if (keyboardInterpreter.rightPressed()) {
             this.turnRight(Constants.TANK_TURN_SPEED);
@@ -72,17 +75,19 @@ public class TankPlayable extends Tank {
         }
         if (keyboardInterpreter.actionPressed()) {
 //            System.out.println("ACTION");
-            gameWorld.addEntityToQueue(this.activatePrimaryAction());
+            this.activatePrimaryAction(gameWorld);
         }
 
+        // DEBUGGING GARBAGE
+
 //        System.out.println(checkIfInLineOfSightSlowUsingLines(gameWorld.getEntity(TANK_AI_1_ID),01));
-//        System.out.println(getQuadrantBasedOnAngle() + " "+ getQuadrantEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)) +" " + Math.cos(getAngle()) + " " + Math.sin(getAngle()) + " " + getB());
+//        System.out.println(getQuadrantBasedOnAngleRad() + " "+ getQuadrantEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)) +" " + Math.cos(getAngle()) + " " + Math.sin(getAngle()) + " " + getBValue());
 //        System.out.println(checkIfInLineOfSightSlowUsingLines(gameWorld.getEntity(TANK_AI_1_ID), 100));
 //        System.out.println(getQuadrantEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)));
 
 //        System.out.println(getQuadrantEntityRelativeDistances(gameWorld.getEntity(TANK_AI_1_ID)));
 
 //        System.out.println(getQuadrantsEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)));;
-//        System.out.println(this.getQuadrantBasedOnAngle());
+//        System.out.println(this.getQuadrantBasedOnAngleRad());
     }
 }

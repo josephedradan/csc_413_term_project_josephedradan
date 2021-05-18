@@ -61,7 +61,7 @@ public class RunGameView extends JPanel {
     }
 
     /**
-     * Adds a new image on screen with the given unique ID. Once added, this sprite will be tracked by the RunGameView
+     * Adds a new image on screen with the given unique id. Once added, this sprite will be tracked by the RunGameView
      * until the sprite is explicitly removed with removeSprite, or until reset is called.
      */
     public void addSprite(
@@ -78,7 +78,7 @@ public class RunGameView extends JPanel {
     }
 
     /**
-     * Removes the sprite with the given ID from the screen. If no sprite with the ID exists, nothing will happen. This
+     * Removes the sprite with the given id from the screen. If no sprite with the id exists, nothing will happen. This
      * should be used when an image should no longer be shown, like if an entity is destroyed, or if a shell goes off
      * screen.
      */
@@ -89,16 +89,16 @@ public class RunGameView extends JPanel {
     }
 
     /**
-     * Updates the location and angle of the sprite with the given ID. The sprite must have already been added
+     * Updates the location and angle of the sprite with the given id. The sprite must have already been added
      * previously with addSprite.
      */
     public void setSpriteLocationAndAngle(Entity entity) {
 
         synchronized (spritesById) {
-            if (!spritesById.containsKey(entity.getTypeId())) {
-                throw new RuntimeException("No sprite with id '" + entity.getTypeId() + "' was added. addSprite must be called first.");
+            if (!spritesById.containsKey(entity.getID())) {
+                throw new RuntimeException("No sprite with id '" + entity.getID() + "' was added. addSprite must be called first.");
             }
-            spritesById.get(entity.getTypeId()).setLocationAndAngle(entity.getX(), entity.getY(), entity.getAngle());
+            spritesById.get(entity.getID()).setLocationAndAngle(entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
         }
     }
 

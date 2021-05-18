@@ -50,13 +50,13 @@ public class GameWorld {
      * Adds a new entity to the game.
      */
     public void addEntity(Entity entity) {
-        entityHashMap.put(entity.getTypeId(), entity);
-        runGameView.addSprite(entity.getTypeId(), entity.getImage(), entity.getX(), entity.getY(), entity.getAngle());
+        entityHashMap.put(entity.getID(), entity);
+        runGameView.addSprite(entity.getID(), entity.getImage(), entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
 
     }
 
     public void addEntityToQueue(Entity entity) {
-//        System.out.println(entity.getTypeId());
+//        System.out.println(entity.getID());
         entityLinkedList.add(entity);
     }
 
@@ -67,14 +67,14 @@ public class GameWorld {
     }
 
     /**
-     * Returns the Entity with the specified ID.
+     * Returns the Entity with the specified id.
      */
     public Entity getEntity(String id) {
         return entityHashMap.get(id);
     }
 
     /**
-     * Removes the entity with the specified ID from the game.
+     * Removes the entity with the specified id from the game.
      */
     public void removeEntity(String id) {
         entityHashMap.remove(id);

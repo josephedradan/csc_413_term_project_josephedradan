@@ -26,20 +26,20 @@ package edu.csc413.tankgame.model;
 
 import static edu.csc413.tankgame.Constants.SHELL_MOVEMENT_SPEED;
 
-public abstract class Shell extends Dynamic {
+public abstract class Shell extends EntityDynamic {
 
     static int i = 0;
 
     private Entity entityParent;
 
-    public Shell(String typeId, double x, double y, double angle, String image, Entity entityParent) {
-        super(typeId + i, x, y, angle, image);
+    public Shell(String id, double x, double y, double angle, String image, Entity entityParent) {
+        super(id + i, x, y, angle, image);
         i++;  // TODO: TOO CHEAP FIX THIS GARBAGE
         this.entityParent = entityParent;
     }
 
     @Override
-    public void act(GameWorld gameWorld) {
+    public void doActionEntityDynamic(GameWorld gameWorld) {
         moveForward(SHELL_MOVEMENT_SPEED);
     }
 }
