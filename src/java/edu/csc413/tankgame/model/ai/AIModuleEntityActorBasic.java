@@ -27,8 +27,7 @@ package edu.csc413.tankgame.model.ai;
 import edu.csc413.tankgame.model.Entity;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
-
-import static edu.csc413.tankgame.Constants.ID_TANK_PLAYER;
+import edu.csc413.tankgame.model.shell.Shell;
 
 public class AIModuleEntityActorBasic extends AIModuleEntityActor {
 
@@ -41,24 +40,31 @@ public class AIModuleEntityActorBasic extends AIModuleEntityActor {
     // Default distance smoothing value
     protected double distanceSmoothing = 4;
 
+    // Default distance where stuff is in this object's zone
+    protected double inMyZoneRadius = 200;
+
+
     public AIModuleEntityActorBasic(GameWorld gameWorld) {
         super(gameWorld);
     }
 
-    protected void autoMoveTowards(EntityActor entityActor, Entity entity) {
-        double distanceDifference = entityActor.getDistanceFromEntity(entity);
+    protected void autoMoveTowards(EntityActor entityActor) {
+
+        if (entityPhysicalTarget != null) {
+            double distanceDifference = entityActor.getDistanceFromEntity(entityPhysicalTarget);
 //        System.out.println(Math.abs(Math.abs(distanceDifference) - distanceDifference));
 
-        // Distance difference tolerance to smooth movement
-        if (Math.abs(Math.abs(distanceDifference) - toleranceDistance) < distanceSmoothing) {
-            return;
-        }
+            // Distance difference tolerance to smooth movement
+            if (Math.abs(Math.abs(distanceDifference) - toleranceDistance) < distanceSmoothing) {
+                return;
+            }
 
-        // Movement
-        if (distanceDifference > toleranceDistance) {
-            boolMoveForward = true;
-        } else if (distanceDifference < toleranceDistance) {
-            boolMoveBackward = true;
+            // Movement
+            if (distanceDifference > toleranceDistance) {
+                boolMoveForward = true;
+            } else if (distanceDifference < toleranceDistance) {
+                boolMoveBackward = true;
+            }
         }
     }
 
@@ -69,29 +75,31 @@ public class AIModuleEntityActorBasic extends AIModuleEntityActor {
      * @param entity
      */
     protected void autoAimTowards(EntityActor entityActor, Entity entity) {
-        // 180 degrees based
-        double angleBetweenLineOfSightAndEntity = entityActor.getAngleRadBetweenLineOfSightAndEntity(entity);
+        if (entity != null) {
+            // 180 degrees based
+            double angleBetweenLineOfSightAndEntity = entityActor.getAngleRadBetweenLineOfSightAndEntity(entity);
 
-        double angleRadLow = Entity.getCosineSimilarityBetweenPointAngleAndEntity(
-                entityActor.getAngleRelativeToWorld() - toleranceAngleRad,
-                entityActor.getX(),
-                entityActor.getY(),
-                entity);
+            double angleRadLow = Entity.getCosineSimilarityBetweenPointAngleAndEntity(
+                    entityActor.getAngleRelativeToWorld() - toleranceAngleRad,
+                    entityActor.getX(),
+                    entityActor.getY(),
+                    entity);
 
-        double angleRadHigh = Entity.getCosineSimilarityBetweenPointAngleAndEntity(
-                entityActor.getAngleRelativeToWorld() + toleranceAngleRad,
-                entityActor.getX(),
-                entityActor.getY(),
-                entity);
+            double angleRadHigh = Entity.getCosineSimilarityBetweenPointAngleAndEntity(
+                    entityActor.getAngleRelativeToWorld() + toleranceAngleRad,
+                    entityActor.getX(),
+                    entityActor.getY(),
+                    entity);
 
-        if (angleBetweenLineOfSightAndEntity < toleranceAngleRad) {
-            return;
-        }
+            if (angleBetweenLineOfSightAndEntity < toleranceAngleRad) {
+                return;
+            }
 
-        if (angleRadHigh < angleRadLow) {
-            boolTurnLeft = true;
-        } else {
-            boolTurnRight = true;
+            if (angleRadHigh < angleRadLow) {
+                boolTurnLeft = true;
+            } else {
+                boolTurnRight = true;
+            }
         }
     }
 
@@ -99,22 +107,28 @@ public class AIModuleEntityActorBasic extends AIModuleEntityActor {
      * Your implementation of pointing towards to player with angles
      *
      * @param entityActor
-     * @param entity
      */
     protected void autoAimTowardsV2(EntityActor entityActor, Entity entity) {
-        double dx = entity.getX() - entityActor.getX();
-        double dy = entity.getY() - entityActor.getY();
+        if (entity != null) {
+            double dx = entity.getX() - entityActor.getX();
+            double dy = entity.getY() - entityActor.getY();
 
-        double angleToEntity = Math.atan2(dy, dx);
-        double angleDifference = entityActor.getAngleRelativeToWorld() - angleToEntity;
+            double angleToEntity = Math.atan2(dy, dx);
+            double angleDifference = entityActor.getAngleRelativeToWorld() - angleToEntity;
 
-        angleDifference -= Math.floor((angleDifference / (2 * Math.PI)) + .5) * (2 * Math.PI);
+            angleDifference -= Math.floor((angleDifference / (2 * Math.PI)) + .5) * (2 * Math.PI);
 
-        if (angleDifference < -toleranceAngleRad) {
-            boolTurnRight = true;
-        } else if (angleDifference > toleranceAngleRad) {
-            boolTurnLeft = true;
+            if (angleDifference < -toleranceAngleRad) {
+                boolTurnRight = true;
+            } else if (angleDifference > toleranceAngleRad) {
+                boolTurnLeft = true;
+            }
         }
+    }
+
+
+    protected void autoAimTowardsV2(EntityActor entityActor) {
+        autoAimTowardsV2(entityActor, entityPhysicalTarget);
     }
 
     public void setToleranceAngleRad(double toleranceAngleRad) {
@@ -127,11 +141,8 @@ public class AIModuleEntityActorBasic extends AIModuleEntityActor {
 
     @Override
     protected void thinkMove(EntityActor entityActor) {
-        Entity player = gameWorld.getEntity(ID_TANK_PLAYER);
-//        autoAimTowards(entityActor, player);
-        autoAimTowardsV2(entityActor, player);
-        autoMoveTowards(entityActor, player);
-
+        autoAimTowardsV2(entityActor);
+        autoMoveTowards(entityActor);
     }
 
     @Override

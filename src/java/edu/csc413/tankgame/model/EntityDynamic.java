@@ -25,16 +25,17 @@
 package edu.csc413.tankgame.model;
 
 import static edu.csc413.tankgame.Constants.TANK_TURN_SPEED;
-import static edu.csc413.tankgame.Constants.TANK_Y_LOWER_BOUND;
 
 /**
  * EntityDynamic is an entity that can move...
  */
-public abstract class EntityDynamic extends Entity {
+public abstract class EntityDynamic extends EntityPhysical {
 
+    private double xPrevious = x;
+    private double yPrevious = y;
 
-    public EntityDynamic(String id, double x, double y, double angle, String image) {
-        super(id, x, y, angle, image);
+    public EntityDynamic(String id, double x, double y, double angle, String image, double health) {
+        super(id, x, y, angle, image, health);
     }
 
 
@@ -94,6 +95,7 @@ public abstract class EntityDynamic extends Entity {
      * Get this entity to look towards the given entity using movement
      * Literally more math intensive than your version. RIP
      * The AI is supposed to think, not the entity itself.
+     *
      * @param entity
      */
     protected void lookTowardsEntity(Entity entity) {
@@ -115,25 +117,48 @@ public abstract class EntityDynamic extends Entity {
         }
     }
 
+    /*
+    Cheap solution to collision that works by setting the current position to the previous frame position...
+    */
+    private void recordPreviousPosition() {
+        xPrevious = x;
+        yPrevious = y;
+    }
+
+    public double getyPrevious() {
+        return yPrevious;
+    }
+
+    public double getxPrevious() {
+        return xPrevious;
+    }
+
+    protected void returnToPreviousPosition() {
+        x = xPrevious;
+        y = yPrevious;
+    }
+
     /**
      * A Handler for the boundary handlers
      * TODO: MAYBE SOMETHING ADVANCE CAN BE ADDED HERE IDK....
      */
-    private void boundaryHandlerHandler(GameWorld gameWorld){
+    private void boundaryHandlerHandler(GameWorld gameWorld) {
         boundaryHandler(gameWorld);
     }
+
 
     protected abstract void boundaryHandler(GameWorld gameWorld);
 
     /**
-     * All EntityDynamic can doActionComplete, even if the details of their doActionComplete logic may vary based on the specific
+     * All EntityDynamic can doActionEntityPhysical, even if the details of their doActionComplete logic may vary based on the specific
      * type of EntityDynamic.
      * The default behavior is to call doActionEntityDynamic.
      * The reason for this function is to allow for overhead to be done.
      *
      * @param gameWorld The game world
      */
-    public void doActionComplete(GameWorld gameWorld) {
+    public void doActionEntityPhysical(GameWorld gameWorld) {
+        recordPreviousPosition(); // Overhead function
         boundaryHandlerHandler(gameWorld);  // Overhead function
         doActionEntityDynamic(gameWorld);
     }
@@ -143,6 +168,7 @@ public abstract class EntityDynamic extends Entity {
      *
      * @param gameWorld The game world
      */
-    protected abstract void doActionEntityDynamic(GameWorld gameWorld);
+    public abstract void doActionEntityDynamic(GameWorld gameWorld);
+
 
 }

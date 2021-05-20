@@ -1,25 +1,26 @@
 package edu.csc413.tankgame.model.tank;
 
 import edu.csc413.tankgame.Constants;
+import edu.csc413.tankgame.model.Entity;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
-import edu.csc413.tankgame.model.shell.ShellStandard;
+import edu.csc413.tankgame.model.shell.Shell;
+import edu.csc413.tankgame.model.shell.ShellBasic;
+import edu.csc413.tankgame.model.wall.Wall;
 
 import static edu.csc413.tankgame.Constants.*;
-import static edu.csc413.tankgame.Constants.TANK_X_UPPER_BOUND;
 
 /**
  * Entity class representing all tanks in the game.
  */
 public abstract class Tank extends EntityActor {
 
-
-    public Tank(String id, double x, double y, double angle, String image) {
-        super(id, x, y, angle, image);
+    public Tank(String id, double x, double y, double angle, String image, double health) {
+        super(id, x, y, angle, image, health);
     }
 
-    public Tank(String id, double x, double y, double angle) {
-        super(id, x, y, angle, IMAGE_TANK_AI);
+    public Tank(String id, double x, double y, double angle, double health) {
+        this(id, x, y, angle, IMAGE_TANK_AI, health);
     }
 
     protected void ActivateActionPrimary(GameWorld gameWorld) {
@@ -27,7 +28,7 @@ public abstract class Tank extends EntityActor {
 
         if (canActivateActionPrimary()) {
             gameWorld.addEntityToQueueForWorld(
-                    new ShellStandard(
+                    new ShellBasic(
                             ID_SHELL_STANDARD + number,
                             getShellX(),
                             getShellY(),
@@ -78,7 +79,7 @@ public abstract class Tank extends EntityActor {
     }
 
     @Override
-    protected void doActionEntityActor(GameWorld gameWorld) {
+    public void doActionEntityActor(GameWorld gameWorld) {
         doTankOverhead();
         doActionTank(gameWorld);
     }
@@ -89,8 +90,122 @@ public abstract class Tank extends EntityActor {
     public double getWidth() {
         return TANK_WIDTH;
     }
+
     @Override
     public double getHeight() {
         return TANK_HEIGHT;
+    }
+
+    /**
+     * What happens to Tank when entity collies with it
+     * <p>
+     * THIS LOOKS ULGY! I REQUIRE BETTER GAME DESIGN TO SUPPORT A SIMPLER DESIGN... BECAUSE THE OF THE PRIVATE!!!
+     *
+     * @param gameWorld
+     * @param entity
+     */
+    @Override
+    protected void collidedStandard(GameWorld gameWorld, Entity entity) {
+
+        if ((entity instanceof Tank) || (entity instanceof Wall)) {
+
+//            if (this instanceof TankPlayer) {
+////                System.out.println(getHorizontalVerticalRelativeToWorldFromLineOfSight());
+//
+//            }
+
+
+            this.returnToPreviousPosition();
+
+//            // V2 Broken FIXME: CAN DETERMINE THE SIDE OF THE COLLISION BUT WILL BREAK EVEN HARDER!
+//            short side = determineHorizontalOrVerticalCollisionSimple(entity);
+//            if (side == 0) {
+//                if (collisionPseudoByGoingUp(entity)) {
+//                    this.y -= this.y + this.getHeight() - entity.getY();
+////                moveForward(entity.getX() + entity.getWidth() - this.x);
+//                    if (this instanceof TankPlayer) {
+//                        System.out.printf("U %s           %s\n", this.y + this.getHeight() - entity.getY(), this.y);
+//                    }
+//                } else if (collisionPseudoByGoingDown(entity)) {
+//                    this.y += entity.getY() + entity.getHeight() - this.y;
+////                moveForward(-entity.getX() + entity.getWidth() - this.x);ssssss d
+//                    if (this instanceof TankPlayer) {
+//                        System.out.printf("D %s           %s\n", entity.getY() + entity.getHeight() - this.y, this.y);
+//                    }
+//                }
+//            }
+//            if (side == 1) {
+//                if (collisionPseudoByGoingLeft(entity)) {
+//                    this.x += entity.getX() + entity.getWidth() - this.x;
+////                moveBackward(TANK_MOVEMENT_SPEED);
+//                    if (this instanceof TankPlayer) {
+//                        System.out.printf("L %s           %s\n", entity.getX() + entity.getWidth() - this.x, this.x);
+//                    }
+//                } else if (collisionPseudoByGoingRight(entity)) {
+//                    this.x -= this.x + this.getWidth() - entity.getX();
+////                moveBackward(TANK_MOVEMENT_SPEED);
+//                    if (this instanceof TankPlayer) {
+//                        System.out.printf("R %s           %s\n", this.x + this.getWidth() - entity.getX(), this.x);
+//                    }
+//                }
+//            }
+
+
+//            // V1 Broken FIXME: CAN'T DETERMINE THE CORRECT SIDE OF COLLISION
+//            if (collisionPseudoByGoingLeft(entity)) {
+////                this.x += entity.getX() + entity.getWidth() - this.x;
+//                moveBackward(entity.getX() + entity.getWidth() - this.x);
+//                if (this instanceof TankPlayer) {
+////                    System.out.printf("L %s           %s\n", entity.getX() + entity.getWidth() - this.x, this.x);
+////                    if (entity.getX() + entity.getWidth() - this.x >1){
+////                        System.out.println("GREASDASDASDASD");
+////                    }
+//                }
+//            }
+//            else if (collisionPseudoByGoingRight(entity)) {
+////                this.x -= this.x + this.getWidth() - entity.getX();
+//                moveBackward(this.x + this.getWidth() - entity.getX());
+//                if (this instanceof TankPlayer) {
+////                    System.out.printf("R %s           %s\n", this.x + this.getWidth() - entity.getX(), this.x);
+//                }
+//            }
+//            if (collisionPseudoByGoingUp(entity)) {
+////                this.y -= this.y + this.getHeight() - entity.getY();
+//                moveBackward(this.y + this.getHeight() - entity.getY());
+//                System.out.println(entity.getX() + entity.getWidth() - this.x);
+//                if (this instanceof TankPlayer) {
+////                    System.out.printf("U %s           %s\n", this.y + this.getHeight() - entity.getY(), this.y);
+//                }
+//            } else if (collisionPseudoByGoingDown(entity)) {
+////                this.y += entity.getY() + entity.getHeight() - this.y;
+//                moveBackward(entity.getY() + entity.getHeight() - this.y);
+//                if (this instanceof TankPlayer) {
+//                    System.out.printf("D %s           %s\n", entity.getY() + entity.getHeight() - this.y, this.y);
+//                }
+//            }
+
+
+            if (entity instanceof Tank) {
+                // TODO DO SOMETHING HERE... IDK
+                Tank tank = (Tank) entity;
+
+            } else if (entity instanceof Wall) {
+                // TODO DO SOMETHING HERE... IDK
+                Wall wall = (Wall) entity;
+            }
+//            System.out.println();
+
+        } else if (entity instanceof Shell) {
+//            System.out.println("\tHIT");
+            Shell shell = (Shell) entity;
+
+            if (shell instanceof ShellBasic) {
+
+                // Your shells can't hurt your
+                if (!shell.getEntityParent().equals(this)) {
+                    this.loseHealth(gameWorld, shell.getDamage());
+                }
+            }
+        }
     }
 }

@@ -24,12 +24,13 @@
 
 package edu.csc413.tankgame.model.ai;
 
+import edu.csc413.tankgame.model.Entity;
 import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
 
 import static edu.csc413.tankgame.Constants.*;
 
-public class AIModuleEntityActorCheating extends AIModuleEntityActor {
+public class AIModuleEntityActorSmartCheating extends AIModuleEntityActorSmart {
 
     protected double turnLefTurnSpeedSpinning = Math.PI / 12;
 
@@ -37,7 +38,7 @@ public class AIModuleEntityActorCheating extends AIModuleEntityActor {
     protected boolean moveRight = true;
 
 
-    public AIModuleEntityActorCheating(GameWorld gameWorld) {
+    public AIModuleEntityActorSmartCheating(GameWorld gameWorld) {
         super(gameWorld);
     }
 

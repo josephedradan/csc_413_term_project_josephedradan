@@ -28,7 +28,7 @@ import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
 
 /**
- * A Literal testing AI
+ * TODO: IGNORE THIS FILE, I USE IT TO TEST AI ALGORITHMS
  */
 public class AIModuleEntityActorTestDummy extends AIModuleEntityActor {
     public AIModuleEntityActorTestDummy(GameWorld gameWorld) {
@@ -37,24 +37,7 @@ public class AIModuleEntityActorTestDummy extends AIModuleEntityActor {
 
     @Override
     protected void thinkMove(EntityActor entityActor) {
-//        Entity player = gameWorld.getEntity(TANK_PLAYER_ID);
-//
-//        double tolerance = Math.toRadians(3);
-//
-//        double angleBetweenLineOfSightAndEntity = entityActor.getAngleRadBetweenLineOfSightAndEntity(player); // 180 degrees based
-//
-//        double lowAngleRad = Entity.getCosineSimilarityBetweenPointAngleAndEntity(entityActor.getAngleRelativeToWorld() - tolerance, entityActor.getX(), entityActor.getY(), player);
-//        double highAngleRad = Entity.getCosineSimilarityBetweenPointAngleAndEntity(entityActor.getAngleRelativeToWorld() + tolerance, entityActor.getX(), entityActor.getY(), player);
-//
-//        if (angleBetweenLineOfSightAndEntity < tolerance) {
-//            return;
-//        }
-//
-//        if (highAngleRad < lowAngleRad) {
-//            turnLefTurnSpeed = TANK_TURN_SPEED;
-//        } else {
-//            turnRightTurnSpeed = TANK_TURN_SPEED;
-//        }
+
     }
 
     @Override

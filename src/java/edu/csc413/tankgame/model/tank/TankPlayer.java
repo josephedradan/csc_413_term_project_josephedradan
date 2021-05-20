@@ -34,15 +34,14 @@ public class TankPlayer extends Tank {
 
     private final KeyboardInterpreter keyboardInterpreter;
 
-    public TankPlayer(String id, double x, double y, double angle, String image, KeyboardInterpreter keyboardInterpreter) {
-        super(id, x, y, angle, image);
+    public TankPlayer(KeyboardInterpreter keyboardInterpreter, String id, double x, double y, double angle, String image, double health) {
+        super(id, x, y, angle, image, health);
         this.keyboardInterpreter = keyboardInterpreter;
 
     }
 
-    public TankPlayer(String id, double x, double y, double angle, KeyboardInterpreter keyboardInterpreter) {
-        this(id, x, y, angle, IMAGE_TANK_PLAYER, keyboardInterpreter);
-
+    public TankPlayer(KeyboardInterpreter keyboardInterpreter, String id, double x, double y, double angle) {
+        this(keyboardInterpreter, id, x, y, angle, IMAGE_TANK_PLAYER, TANK_HEALTH_PLAYER);
     }
 
     @Override
@@ -77,13 +76,13 @@ public class TankPlayer extends Tank {
         // DEBUGGING GARBAGE
 
 //        System.out.println(checkIfInLineOfSightSlowUsingLines(gameWorld.getEntity(TANK_AI_1_ID),01));
-//        System.out.println(getQuadrantBasedOnAngleRad() + " "+ getQuadrantEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)) +" " + Math.cos(getAngle()) + " " + Math.sin(getAngle()) + " " + getBValue());
+//        System.out.println(getQuadrantRelativeToWorld() + " "+ getQuadrantRelativeEntity(gameWorld.getEntity(TANK_AI_1_ID)) +" " + Math.cos(getAngle()) + " " + Math.sin(getAngle()) + " " + getBValue());
 //        System.out.println(checkIfInLineOfSightSlowUsingLines(gameWorld.getEntity(TANK_AI_1_ID), 100));
-//        System.out.println(getQuadrantEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)));
+//        System.out.println(getQuadrantRelativeEntity(gameWorld.getEntity(TANK_AI_1_ID)));
 
 //        System.out.println(getQuadrantEntityRelativeDistances(gameWorld.getEntity(TANK_AI_1_ID)));
 
 //        System.out.println(getQuadrantsEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)));;
-//        System.out.println(this.getQuadrantBasedOnAngleRad());
+//        System.out.println(this.getQuadrantRelativeToWorld());
     }
 }

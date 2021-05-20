@@ -24,13 +24,22 @@
 
 package edu.csc413.tankgame.model.ai;
 
+import edu.csc413.tankgame.model.Entity;
 import edu.csc413.tankgame.model.EntityActor;
+import edu.csc413.tankgame.model.EntityPhysical;
 import edu.csc413.tankgame.model.GameWorld;
+import edu.csc413.tankgame.model.shell.Shell;
+import edu.csc413.tankgame.model.tank.TankPlayer;
+
+import java.util.Collection;
+
+import static edu.csc413.tankgame.Constants.IMAGE_TANK_AI;
+import static edu.csc413.tankgame.Constants.IMAGE_TANK_PLAYER;
 
 public abstract class AIModule {
 
     /**
-     * An AI needs the gameworld regardless because they are always cheating even when they are not doing anything...
+     * An AI needs the gameWorld regardless because they are always cheating even when they are not doing anything...
      * TODO: IDK when i'm going to need it, but I will probably...
      */
     protected final GameWorld gameWorld;
@@ -48,6 +57,10 @@ public abstract class AIModule {
     protected boolean boolActivateActionPrimary;
     protected boolean boolActivateActionSecondary;
     protected boolean boolActivateActionTertiary;
+
+    protected Entity entityPhysicalTarget = null;
+
+    private boolean autoSelectNewEntityTargetBool;
 
     public AIModule(GameWorld gameWorld) {
         resetBrain();
@@ -133,6 +146,14 @@ public abstract class AIModule {
      */
     public void think(EntityActor entityActor) {
         resetBrain();
+        imageChanger(entityActor);
+
+        // Select new target
+        if (autoSelectNewEntityTargetBool) {
+            autoSelectNewtEntityTargetAlgorithm(entityActor);
+//            System.out.println(entityPhysicalTarget);
+        }
+
         thinkMove(entityActor);
         thinkAction(entityActor);
     }
@@ -154,5 +175,55 @@ public abstract class AIModule {
         boolActivateActionPrimary = false;
         boolActivateActionSecondary = false;
         boolActivateActionTertiary = false;
+    }
+
+    private void imageChanger(EntityActor entityActor) {
+        if (entityPhysicalTarget instanceof TankPlayer) {
+            entityActor.setImage(IMAGE_TANK_AI);
+        } else {
+            entityActor.setImage(IMAGE_TANK_PLAYER);
+        }
+    }
+
+    public void setEntityPhysicalTarget(EntityPhysical entity) {
+        entityPhysicalTarget = entity;
+    }
+
+    public void autoSelectNewEntityTarget(boolean value) {
+        autoSelectNewEntityTargetBool = true;
+    }
+
+    /**
+     * Select the next target in the gameWorld
+     */
+    private void autoSelectNewtEntityTargetAlgorithm(EntityActor entityActor) {
+        if (entityPhysicalTarget == null) {
+            Collection<Entity> entities = gameWorld.getEntitiesFast();
+            for (Entity entity : entities) {
+                if (entity instanceof EntityActor) {
+
+                    // Skip self
+                    if (entity.equals(entityActor)) {
+                        continue;
+                    }
+
+                    // Set Target
+                    entityPhysicalTarget = entity;
+                    return;
+                }
+            }
+            for (Entity entity : entities) {
+                if (entity instanceof EntityPhysical && !(entity instanceof Shell)) {
+                    entityPhysicalTarget = entity;
+                    return;
+                }
+            }
+        } else {
+            if (entityPhysicalTarget instanceof EntityPhysical) {
+                if (((EntityPhysical) entityPhysicalTarget).getHealth() <= 0) {
+                    entityPhysicalTarget = null;
+                }
+            }
+        }
     }
 }

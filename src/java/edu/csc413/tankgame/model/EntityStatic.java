@@ -24,10 +24,17 @@
 
 package edu.csc413.tankgame.model;
 
-public abstract class EntityStatic extends Entity {
+public abstract class EntityStatic extends EntityPhysical {
 
-    public EntityStatic(String id, double x, double y, double angle, String image) {
-        super(id, x, y, angle, image);
+    public EntityStatic(String id, double x, double y, double angle, String image, double health) {
+        super(id, x, y, angle, image, health);
     }
 
+
+    @Override
+    public void doActionEntityPhysical(GameWorld gameWorld) {
+        doActionEntityStatic(gameWorld);
+    }
+
+    public abstract void doActionEntityStatic(GameWorld gameWorld);
 }

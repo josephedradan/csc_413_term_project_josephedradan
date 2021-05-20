@@ -24,7 +24,7 @@
  *
  */
 
-package edu.csc413.tankgame;
+package edu.csc413.tankgame._ignore;
 
 //public class JosephsTestingZone {
 //

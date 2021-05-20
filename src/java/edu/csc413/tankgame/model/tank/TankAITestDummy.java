@@ -28,15 +28,19 @@ import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActor;
 
 import static edu.csc413.tankgame.Constants.IMAGE_TANK_AI;
+import static edu.csc413.tankgame.Constants.TANK_HEALTH_AI;
 
+/**
+ * TODO: IGNORE THIS FILE, I USE IT TO TEST TANK FEATURES
+ */
 public class TankAITestDummy extends TankAI {
 
-    public TankAITestDummy(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image) {
-        super(aiModuleEntityActor, id, x, y, angle, image);
+    public TankAITestDummy(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image, double health) {
+        super(aiModuleEntityActor, id, x, y, angle, image, health);
     }
 
     public TankAITestDummy(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle) {
-        this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI);
+        this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI, TANK_HEALTH_AI);
     }
 
     protected void doActionTankAI(GameWorld gameWorld) {

@@ -102,6 +102,12 @@ public class RunGameView extends JPanel {
         }
     }
 
+    public void setSpriteImage(Entity entity) {
+        synchronized (spritesById) {
+            spritesById.get(entity.getId()).setImage(entity.getImage());
+        }
+    }
+
     /**
      * Adds an animation (specified with an AnimationResource -- see constants above for choices) at the given position
      * with the provided delay between each frame in the animation. Once the animation finishes, the RunGameView will

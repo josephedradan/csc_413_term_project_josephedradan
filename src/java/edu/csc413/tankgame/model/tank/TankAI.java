@@ -33,14 +33,14 @@ public class TankAI extends Tank {
 
     protected final AIModuleEntityActor aiModuleEntityActor;
 
-    public TankAI(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image) {
-        super(id, x, y, angle, image);
+    public TankAI(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image, double health) {
+        super(id, x, y, angle, image, health);
         this.aiModuleEntityActor = aiModuleEntityActor;
 
     }
 
     public TankAI(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle) {
-        this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI);
+        this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI, TANK_HEALTH_AI);
     }
 
 

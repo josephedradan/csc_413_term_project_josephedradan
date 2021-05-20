@@ -28,7 +28,6 @@ import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.GameWorld;
 
 import static edu.csc413.tankgame.Constants.AI_ACCURACY;
-import static edu.csc413.tankgame.Constants.ID_TANK_PLAYER;
 
 public abstract class AIModuleEntityActor extends AIModule {
 
@@ -40,15 +39,20 @@ public abstract class AIModuleEntityActor extends AIModule {
     }
 
     protected void activateActionsWhenInLineOfSight(EntityActor entityActor){
-        if (entityActor.checkIfInLineOfSightFastUsingVectors(gameWorld.getEntity(ID_TANK_PLAYER), accuracy)) {
-            boolActivateActionPrimary = true;
-            boolActivateActionSecondary = true;
-            boolActivateActionTertiary = true;
+        if (entityPhysicalTarget != null) {
+            if (entityActor.checkIfInLineOfSightFastUsingVectors(entityPhysicalTarget, accuracy)) {
+                boolActivateActionPrimary = true;
+                boolActivateActionSecondary = true;
+                boolActivateActionTertiary = true;
+            }
         }
     }
     protected void activateActionPrimaryWhenInLineOfSight(EntityActor entityActor){
-        if (entityActor.checkIfInLineOfSightFastUsingVectors(gameWorld.getEntity(ID_TANK_PLAYER), accuracy)) {
-            boolActivateActionPrimary = true;
+        if (entityPhysicalTarget != null){
+
+                if (entityActor.checkIfInLineOfSightFastUsingVectors(entityPhysicalTarget, accuracy)) {
+                boolActivateActionPrimary = true;
+            }
         }
     }
 

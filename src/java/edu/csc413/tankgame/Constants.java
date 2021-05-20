@@ -17,8 +17,16 @@ public class Constants {
     public static final String ID_TANK_AI_1 = "tank-ai-1";
     public static final String ID_TANK_AI_2 = "tank-ai-2";
     public static final String ID_TANK_AI_3 = "tank-ai-3";
+    public static final String ID_TANK_AI_4 = "tank-ai-4";
     public static final String ID_SHELL_STANDARD = "shell-standard-shell";
     public static final String ID_WALL_STANDARD = "wall-standard-shell";
+
+    public static final double SHELL_DAMAGE_BASIC = 100;
+    public static final double SHELL_HEALTH = 10;
+    public static final double TANK_HEALTH_PLAYER = 250.0;
+    public static final double TANK_HEALTH_AI = 500.0;
+    public static final double TANK_HEALTH_AI_BOSS = 3000.0;
+    public static final double WALL_HEALTH = 1000.0;
 
     public static final double TANK_PLAYER_INITIAL_X = 250.0;
     public static final double TANK_PLAYER_INITIAL_Y = 200.0;

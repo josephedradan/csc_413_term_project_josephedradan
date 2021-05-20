@@ -1,28 +1,36 @@
 package edu.csc413.tankgame.controller;
 
 import edu.csc413.tankgame.WallInformation;
-import edu.csc413.tankgame.model.*;
+import edu.csc413.tankgame.model.Entity;
+import edu.csc413.tankgame.model.EntityPhysical;
+import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorBasic;
-import edu.csc413.tankgame.model.ai.AIModuleEntityActorCheating;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorSmartCheating;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorSmart;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorTestDummy;
-import edu.csc413.tankgame.model.tank.TankAI;
-import edu.csc413.tankgame.model.tank.TankAICheating;
-import edu.csc413.tankgame.model.tank.TankAITestDummy;
-import edu.csc413.tankgame.model.tank.TankPlayer;
-import edu.csc413.tankgame.view.*;
+import edu.csc413.tankgame.model.shell.Shell;
+import edu.csc413.tankgame.model.tank.*;
+import edu.csc413.tankgame.model.wall.Wall;
+import edu.csc413.tankgame.view.MainView;
+import edu.csc413.tankgame.view.RunGameView;
+import edu.csc413.tankgame.view.StartMenuView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
 import static edu.csc413.tankgame.Constants.*;
+import static edu.csc413.tankgame.view.RunGameView.*;
 
 public class GameDriver {
     private final MainView mainView;
     private final RunGameView runGameView;
 
     private GameWorld gameWorld;
-    private CollisionDetector collisionDetector;
+
+
+    private final int deathTimer = 200;
+    private int deathTimerCounter = deathTimer;
 
     public GameDriver() {
 
@@ -31,7 +39,6 @@ public class GameDriver {
 
         // Run main window
         runGameView = mainView.getRunGameView();
-
 
     }
 
@@ -89,6 +96,9 @@ public class GameDriver {
             resetGame();
         };
 
+        // Resetting global defaults
+        deathTimerCounter = deathTimer;
+
         // Run game on a thread
         new Thread(gameRunner).start();
     }
@@ -100,35 +110,57 @@ public class GameDriver {
     private void setUpGame() {
         gameWorld = new GameWorld(runGameView);
         initializeWWalls(gameWorld);
-        collisionDetector = new CollisionDetector(gameWorld);
-
 
         KeyboardInterpreter keyboardInterpreter = new KeyboardInterpreter(
                 KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
+        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, TANK_PLAYER_INITIAL_X, TANK_PLAYER_INITIAL_Y, TANK_PLAYER_INITIAL_ANGLE);
 
-        TankPlayer tankPlayer = new TankPlayer(ID_TANK_PLAYER, TANK_PLAYER_INITIAL_X, TANK_PLAYER_INITIAL_Y, TANK_PLAYER_INITIAL_ANGLE, keyboardInterpreter);
+        // Hacker
+        AIModuleEntityActorSmartCheating aiModuleTankSpinHack2 = new AIModuleEntityActorSmartCheating(gameWorld);
+        aiModuleTankSpinHack2.setAccuracy(.99);
+        aiModuleTankSpinHack2.setTurnLefTurnSpeedSpinning(Math.PI / 60);
+        aiModuleTankSpinHack2.setEntityPhysicalTarget(tankPlayer);
+        aiModuleTankSpinHack2.autoSelectNewEntityTarget(true);
+        TankAIHacked tankAICheating2 = new TankAIHacked(aiModuleTankSpinHack2, ID_TANK_AI_4, TANK_X_UPPER_BOUND, TANK_Y_UPPER_BOUND, 0);
+        tankAICheating2.enableNoCooldown(true);
+        tankAICheating2.enableGodMode(false);
 
+        // An ally until the target is dead...
+        AIModuleEntityActorSmartCheating aiModuleTankSpinHack = new AIModuleEntityActorSmartCheating(gameWorld);
+        aiModuleTankSpinHack.setAccuracy(.98);
+        aiModuleTankSpinHack.setTurnLefTurnSpeedSpinning(Math.PI / 12);
+        aiModuleTankSpinHack.setEntityPhysicalTarget(tankAICheating2);
+        aiModuleTankSpinHack.autoSelectNewEntityTarget(true);
+        TankAIHacked tankAICheating = new TankAIHacked(aiModuleTankSpinHack, ID_TANK_AI_2, 0, 0, 0);
+        tankAICheating.enableNoCooldown(true);
+        tankAICheating.enableGodMode(false);
 
-        AIModuleEntityActorCheating aiModuleTankSpinHack = new AIModuleEntityActorCheating(gameWorld);
-        aiModuleTankSpinHack.setAccuracy(.999);
-        aiModuleTankSpinHack.setAccuracy(.95);
-        aiModuleTankSpinHack.setTurnLefTurnSpeedSpinning(Math.PI / 60);
-
+        // Basic AI that targets all entities other than shells
         AIModuleEntityActorBasic aiModuleEntityActorBasic = new AIModuleEntityActorBasic(gameWorld);
+//        aiModuleEntityActorBasic.setEntityPhysicalTarget(tankPlayer);
+        aiModuleEntityActorBasic.autoSelectNewEntityTarget(true);
+        TankAI tankAIAutoTarget = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_3, 400, 400, 0);
 
+        // Dummy Tank with Dummy AI
         AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
+        aiModuleEntityActorTestDummy.setEntityPhysicalTarget(tankPlayer);
+        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, ID_TANK_AI_1, 500, 500, 0);
 
-        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, ID_TANK_AI_1, 500, 500, 0); // Angle must be 0 to spin hack properly
+        // Basic AI that targets all entities other than shells
+        AIModuleEntityActorSmart aiModuleEntityActorSmart = new AIModuleEntityActorSmart(gameWorld);
+//        aiModuleEntityActorBasic.setEntityPhysicalTarget(tankPlayer);
+        aiModuleEntityActorSmart.autoSelectNewEntityTarget(true);
+        TankAI tankAIAutoTarget2 = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0);
 
-        TankAI tankAICheating = new TankAICheating(aiModuleTankSpinHack, ID_TANK_AI_2, 50, TANK_AI_1_INITIAL_Y, 0); // Angle must be 0 to spin hack properly
-
-        TankAI tankAICheatingAutoTarget = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_3, 400, 400, 0); // Angle must be 0 to spin hack properly
 
         gameWorld.addEntityToQueueForWorld(tankPlayer);
         gameWorld.addEntityToQueueForWorld(tankAITestDummy);
         gameWorld.addEntityToQueueForWorld(tankAICheating);
-        gameWorld.addEntityToQueueForWorld(tankAICheatingAutoTarget);
+        gameWorld.addEntityToQueueForWorld(tankAICheating2);
+//        gameWorld.addEntityToQueueForWorld(tankAIAutoTarget);
+        gameWorld.addEntityToQueueForWorld(tankAIAutoTarget2);
+
 
     }
 
@@ -136,26 +168,69 @@ public class GameDriver {
      * updateGame is repeatedly called in the gameplay loop. The code in this method should run a single frame of the
      * game. As long as it returns true, the game will continue running. If the game should stop for whatever reason
      * (e.g. the player tank being destroyed, escape being pressed), it should return false.
+     * <p>
+     * Time Complexity: n + n^2
      */
     private boolean updateGame() {
+
         for (Entity entity : gameWorld.getEntitiesFast()) {
 
-            // Movement of Dynamic entities
-            if (entity instanceof EntityDynamic) {
-                ((EntityDynamic) entity).doActionComplete(gameWorld);
-            }
+            Entity entityCurrent = (Entity) entity;
 
+            entityCurrent.doActionEntity(gameWorld);
 
-            // TODO BETTER SOLUTION PLS
+            // FIXME: WILL NOT GUARANTEE AND DETERMINE THAT 2 OBJECTS HAVE COLLIDED BECAUSE THE SHELL COULD BE AHEAD IN THE COLLECTION OF ENTITIES
+//            for (Entity entityOpposing : gameWorld.getEntitiesFast()) {
+//                if (!entityCurrent.equals(entityOpposing)){
+//
+//                    entityCurrent.checkCollision(gameWorld, entityOpposing);
+//                }
+//            }
+
             runGameView.setSpriteLocationAndAngle(entity);
+            runGameView.setSpriteImage(entity);
         }
 
-        collisionDetector.run();
-        System.out.println();
+
+        /**
+         * COLLISION CHECKING IS AFTER TO GUARANTEE THAT 2 OBJECTS HAVE COLLIDED AT THE COST OF SPEED
+         *
+         * TODO: IF THE BELOW CODE IS NOT COMMENTED OUT, THEN I DON'T HAVE TIME TO WRITE AN OPTIMAL COLLISION ALGORITHM
+         */
+        for (Entity entityHit : gameWorld.getEntitiesFast()) {
+            for (Entity entityDoingTheHit : gameWorld.getEntitiesFast()) {
+                if (!entityHit.equals(entityDoingTheHit)) {
+                    boolean collision = entityHit.checkCollision(gameWorld, entityDoingTheHit);
+                    if (collision) {
+                        animationHandler(entityHit, entityDoingTheHit);
+                    }
+                }
+            }
+        }
 
         gameWorld.pushEntitiesFromQueueForWorldToWorld();
         gameWorld.popEntitiesFromQueueRemoveFromWorld();
+
+        if (gameWorld.getEntity(ID_TANK_PLAYER) == null) {
+            deathTimerCounter -= 1;
+            System.out.printf("Menu screen in %d\n", deathTimerCounter);
+            if (deathTimerCounter <= 0) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    private void animationHandler(Entity entityHit, Entity entityDoingTheHit) {
+        if (entityDoingTheHit instanceof Shell) {
+            runGameView.addAnimation(SHELL_EXPLOSION_ANIMATION, SHELL_EXPLOSION_FRAME_DELAY, entityDoingTheHit.getX(), entityDoingTheHit.getY());
+
+            if (entityHit instanceof Tank || entityHit instanceof Wall) {
+                if (((EntityPhysical) entityHit).getHealth() <= 0) {
+                    runGameView.addAnimation(BIG_EXPLOSION_ANIMATION, BIG_EXPLOSION_FRAME_DELAY, entityHit.getX(), entityHit.getY());
+                }
+            }
+        }
     }
 
     private void initializeWWalls(GameWorld gameWorld) {

@@ -27,20 +27,21 @@ package edu.csc413.tankgame.model.tank;
 import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActor;
 
-import static edu.csc413.tankgame.Constants.IMAGE_TANK_AI;
+import static edu.csc413.tankgame.Constants.*;
 
 /**
  * TODO: This should have more features to justice a new class...
  */
-public class TankAICheating extends TankAI {
+public class TankAIHacked extends TankAI {
 
-    public TankAICheating(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image) {
-        super(aiModuleEntityActor, id, x, y, angle, image);
-        this.enableCheating();
+    protected boolean hacked = false;
+
+    public TankAIHacked(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image, double health) {
+        super(aiModuleEntityActor, id, x, y, angle, image,health );
     }
 
-    public TankAICheating(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle) {
-        this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI);
+    public TankAIHacked(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle) {
+        this(aiModuleEntityActor, id, x, y, angle, IMAGE_TANK_AI, TANK_HEALTH_AI);
     }
 
     /**
@@ -69,6 +70,15 @@ public class TankAICheating extends TankAI {
 
     @Override
     protected void doActionTank(GameWorld gameWorld) {
+        if (hacked){
+            setHealth(100000000); // Basically toggling God Mode
+//            gainHealth(1000); // Gaining HP
+//            loseHealth(gameWorld, -1000); // If you ever used a memory editor in game before 😉
+        }
         doActionTankAI(gameWorld);
+    }
+
+    public void enableGodMode(boolean value){
+        hacked = value;
     }
 }

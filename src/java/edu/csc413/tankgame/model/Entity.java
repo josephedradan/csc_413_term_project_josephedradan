@@ -68,13 +68,28 @@ public abstract class Entity {
         return Math.sqrt(Math.pow(xGiven - x + xOffset, 2) + Math.pow(yGiven - y + yOffset, 2));
     }
 
+    /**
+     * Get if the line of sight is looking towards either majority horizontal or majority vertical
+     *
+     * @return
+     */
+    public short getHorizontalVerticalRelativeToWorldFromLineOfSight() {
+        double xThisRelative = Math.cos(angleRelativeToWorld);
+        double yThisRelative = Math.sin(angleRelativeToWorld);
+
+        if (Math.abs(xThisRelative) > Math.abs(yThisRelative)) {
+            return 0;
+        }
+        return 1;
+    }
+
 
     /**
      * Get the Quadrant relative to this entity based on this entity's angle
      *
      * @return Quadrant
      */
-    public short getQuadrantBasedOnAngleRad() {
+    public short getQuadrantRelativeToWorld() {
 
         double xThisRelative = Math.cos(angleRelativeToWorld);
         double yThisRelative = Math.sin(angleRelativeToWorld);
@@ -113,11 +128,11 @@ public abstract class Entity {
      * @param entity Entity given
      * @return Quadrant
      */
-    public short getQuadrantEntityRelative(Entity entity) {
-        return getQuadrantPositionRelative(entity.getX(), entity.getY());
+    public short getQuadrantRelativeEntity(Entity entity) {
+        return getQuadrantRelativeToPosition(entity.getX(), entity.getY());
     }
 
-    public short getQuadrantPositionRelative(double xGiven, double yGiven) {
+    public short getQuadrantRelativeToPosition(double xGiven, double yGiven) {
         double yDiff = yGiven - this.getY();
         double xDiff = xGiven - this.getX();
 
@@ -162,11 +177,11 @@ public abstract class Entity {
             if (Math.round(bThis) == Math.round(bEntityRelativeToThis)) {
                 ArrayList<Integer> integerArrayList = getQuadrantsEntityRelative(entity);
                 for (int j = 0; j < 1; i++) {
-                    if (integerArrayList.get(i) == this.getQuadrantBasedOnAngleRad()) {
+                    if (integerArrayList.get(i) == this.getQuadrantRelativeToWorld()) {
                         return true;
                     }
                 }
-//                if (this.getQuadrantEntityRelative(entity) == this.getQuadrantBasedOnAngleRad()) {
+//                if (this.getQuadrantRelativeEntity(entity) == this.getQuadrantRelativeToWorld()) {
 //                    return true;
 //                }
             }
@@ -201,17 +216,17 @@ public abstract class Entity {
 //            System.out.println(integerArrayList);
 
             for (int i = 0; i < 1; i++) {
-                if (integerArrayList.get(i) == this.getQuadrantBasedOnAngleRad()) {
-//                    System.out.println(entity.getQuadrantBasedOnAngleRad());
+                if (integerArrayList.get(i) == this.getQuadrantRelativeToWorld()) {
+//                    System.out.println(entity.getQuadrantRelativeToWorld());
                     return true;
                 }
             }
 
-//            if (this.getQuadrantsEntityRelative(entity).get(0) == this.getQuadrantBasedOnAngleRad()) {
+//            if (this.getQuadrantsEntityRelative(entity).get(0) == this.getQuadrantRelativeToWorld()) {
 //                return true;
 //            }
 
-//            if (this.getQuadrantEntityRelative(entity) == this.getQuadrantBasedOnAngleRad()) {
+//            if (this.getQuadrantRelativeEntity(entity) == this.getQuadrantRelativeToWorld()) {
 //                return true;
 //            }
 
@@ -335,9 +350,9 @@ public abstract class Entity {
     }
 
 
-
     /**
      * Get Cosine similarity between a point with an angle and the given entity
+     *
      * @param angle
      * @param x
      * @param y
@@ -364,8 +379,141 @@ public abstract class Entity {
 
 
     public abstract double getWidth();
+
     public abstract double getHeight();
 
+    /**
+     * Very basic implementation of collision checking because I can't write an optimal one based on the design of this
+     * game... RIP.\
+     * <p>
+     * Caller must tell given entity that it has been hit and that it must deal with it.
+     * <p>
+     * FIXME: COLLISION ALGORITHM IS TOO BASIC
+     *
+     * @param entity
+     */
+    public boolean checkCollision(GameWorld gameWorld, Entity entity) {
+
+        // Side Collision Check
+//        if (collisionPseudoByGoingLeft(entity) || collisionPseudoByGoingRight(entity)) {
+//            if (collisionPseudoByGoingUp(entity) || collisionPseudoByGoingDown(entity)) {
+//                System.out.printf("S %s %s\n", this, entity);
+//                this.collidedStandard(gameWorld, entity);
+////                entity.collidedStandard(gameWorld, this); // Do collision for the given entity immediately
+//
+//            }
+//        }
+
+        // Inside Collision Check
+        if (collisionInside(entity)) {
+//            System.out.printf("I %s %s\n", this, entity);
+            this.collidedStandard(gameWorld, entity);
+            return true;
+        }
+
+//        if (collisionPseudoByGoingUp(entity) || collisionPseudoByGoingDown(entity)) {
+//            if (collisionPseudoByGoingLeft(entity) || collisionPseudoByGoingRight(entity)) {
+////                System.out.printf("%s %s\n", this, entity);
+//                this.collidedStandard(gameWorld, entity);
+////                entity.collidedStandard(gameWorld, this);
+//            }
+//        }
+
+//        collisionPseudoByGoingRight(entity);
+//        collisionPseudoByGoingLeft(entity);
+//        collisionPseudoByGoingUp(entity);
+//        collisionPseudoByGoingDown(entity);
+
+        return false;
+    }
+
+    /*
+    THE BELOW 4 FUNCTIONS ARE USED TO DETERMINE COLLISION ON SIDES
+
+    */
+    protected boolean collisionPseudoByGoingRight(Entity entity) {
+        if ((this.getX() + this.getWidth() >= entity.getX()) && (this.getX() <= entity.getX())) {
+//            System.out.println("Pseudo Going Right");
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean collisionPseudoByGoingLeft(Entity entity) {
+        if ((this.getX() <= entity.getX() + entity.getWidth()) && (this.getX() + this.getWidth() >= entity.getX() + entity.getWidth())) {
+//            System.out.println("Pseudo Going Left");
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean collisionPseudoByGoingUp(Entity entity) {
+        if ((this.getY() + this.getHeight() >= entity.getY()) && (this.getY() <= entity.getY())) {
+//            System.out.println("Pseudo Going Up");
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean collisionPseudoByGoingDown(Entity entity) {
+        if ((this.getY() <= entity.getY() + entity.getHeight()) && (this.getY() + this.getHeight()) >= entity.getY() + entity.getHeight()) {
+//            System.out.println("Pseudo Going Down");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This entity inside the other entity collision
+     *
+     * @param entity
+     * @return
+     */
+    protected boolean collisionInside(Entity entity) {
+        if ((this.getX() < entity.getX() + entity.getWidth()) &&
+                (this.getX() + this.getWidth() > entity.getX()) &&
+                (this.getY() < entity.getY() + entity.getHeight()) &&
+                (this.getY() + this.getHeight() > entity.getY())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determine what side you collidedStandard with in a simple way by using the minimum value of how much you are inside of
+     * the given entity
+     * <p>
+     * TODO: Very inefficient, fix please
+     * <p>
+     * Call this function when you are colliding only!
+     *
+     * @return The side you hit from
+     */
+    protected short determineHorizontalOrVerticalCollisionSimple(Entity entity) {
+        double xFromGoingRightDiff = this.x + this.getWidth() - entity.getX();
+        double xFromGoingLeftDIff = this.x + entity.getX() + entity.getWidth() - this.x;
+
+        double xMin = Math.min(Math.abs(xFromGoingRightDiff), Math.abs(xFromGoingLeftDIff));
+
+        double yFromGoingUpDiff = this.y + this.getHeight() - entity.getY();
+        double yFromGoingDownDIff = entity.getY() + entity.getHeight() - this.y;
+
+        double yMin = Math.min(Math.abs(yFromGoingUpDiff), Math.abs(yFromGoingDownDIff));
+
+        if (xMin < yMin) {
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * Every entity has it's own logic for handling collision... I can't do a singleton like class because of the
+     * private... Can't control the entities from outside... RIP
+     *
+     * @param gameWorld
+     * @param entity
+     */
+    protected abstract void collidedStandard(GameWorld gameWorld, Entity entity);
 
     public void setImage(String image) {
         this.image = image;
@@ -374,5 +522,8 @@ public abstract class Entity {
     public String getImage() {
         return image;
     }
+
+
+    public abstract void doActionEntity(GameWorld gameWorld);
 }
 
