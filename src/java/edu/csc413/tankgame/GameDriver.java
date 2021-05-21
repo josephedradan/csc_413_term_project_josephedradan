@@ -177,6 +177,9 @@ public class GameDriver {
         /*
         Smarter AI that targets all entities and if you shot near this
 
+        Tank
+            - 2000 HP default
+
         AI:
             - Target Other Actors then Target all the other entities UNLESS you fire at or near this AI who will then
               reduce it's incoming damage by moving away and destroying incoming shells that might kill this tank and
@@ -186,7 +189,7 @@ public class GameDriver {
         AIModuleEntityActorSmart aiModuleEntityActorSmart = new AIModuleEntityActorSmart(gameWorld);
 //        aiModuleEntityActorBasic.setEntityTarget(tankPlayer);
         aiModuleEntityActorSmart.autoSelectNewEntityTarget(true);
-        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0);
+        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0,AI_TANK_IMAGE_FILE, 2000);
 
         // Dummy Tank with Dummy AI ("He's just standing there... MENACINGLY")
         AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
@@ -289,7 +292,6 @@ public class GameDriver {
             ));
         }
     }
-
 
     /**
      * resetGame is called at the end of the game once the gameplay loop exits. This should clear any existing data from
