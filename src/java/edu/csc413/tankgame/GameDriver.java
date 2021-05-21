@@ -118,13 +118,13 @@ public class GameDriver {
         The Player
 
         Tank:
-            - 2000 Health tank foe balancing
+            - 2500 Health tank foe balancing
 
         */
         KeyboardInterpreter keyboardInterpreter = new KeyboardInterpreter(
                 KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
-        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, 0, 0, TANK_PLAYER_INITIAL_ANGLE, PLAYER_TANK_IMAGE_FILE, 2000);
+        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, 0, 0, TANK_PLAYER_INITIAL_ANGLE, PLAYER_TANK_IMAGE_FILE, 2500);
 
         /*
         Hacking AI that is spin hacking and blinking randomly across the map and wants to kill you first and then
@@ -134,17 +134,17 @@ public class GameDriver {
             - Target tankPlayer then Target Other Actors then Target all the other entities
 
         Hacks:
-            - .99 Percent accuracy based on target
+            - .98 Percent accuracy based on target
             - Spin hacking with position blinking
-            - 1500 Health
+            - 2000 Health
             - 0 Cool Down
         */
         AIModuleEntityActorCheating aiModuleTankSpinHackBigGuy = new AIModuleEntityActorCheating(gameWorld);
-        aiModuleTankSpinHackBigGuy.setAccuracy(.99);
+        aiModuleTankSpinHackBigGuy.setAccuracy(.98);
         aiModuleTankSpinHackBigGuy.setTurnLefTurnSpeedSpinning(Math.PI / 60);
         aiModuleTankSpinHackBigGuy.setEntityTarget(tankPlayer);
         aiModuleTankSpinHackBigGuy.autoSelectNewEntityTarget(true);
-        TankAIHacked tankAICheatingBigGuy = new TankAIHacked(aiModuleTankSpinHackBigGuy, ID_TANK_AI_4, TANK_X_UPPER_BOUND, TANK_Y_UPPER_BOUND, 0, IMAGE_TANK_AI, 1500);
+        TankAIHacked tankAICheatingBigGuy = new TankAIHacked(aiModuleTankSpinHackBigGuy, ID_TANK_AI_4, TANK_X_UPPER_BOUND, TANK_Y_UPPER_BOUND, 0, IMAGE_TANK_AI, 2000);
         tankAICheatingBigGuy.enableNoCoolDown(true);
         tankAICheatingBigGuy.enableGodMode(false);
 
@@ -173,6 +173,8 @@ public class GameDriver {
         /*
         Basic AI that targets all entities other than shells
 
+        Tank:
+            - 500 Health
         AI:
             - Target Other Actors then Target all the other entities
             - Does not get too close to target
@@ -181,13 +183,13 @@ public class GameDriver {
         AIModuleEntityActorBasic aiModuleEntityActorBasic = new AIModuleEntityActorBasic(gameWorld);
 //        aiModuleEntityActorBasic.setEntityTarget(tankPlayer);
         aiModuleEntityActorBasic.autoSelectNewEntityTarget(true);
-        TankAI tankAIBasic = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_5, 900, 0, 0);
+        TankAI tankAIBasic = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_5, 500, 0, 0);
 
         /*
         Smarter AI that targets all entities and if you shot near this
 
         Tank
-            - 2000 HP default
+            - 1500 HP default
 
         AI:
             - Target Other Actors then Target all the other entities UNLESS you fire at or near this AI who will then
@@ -198,7 +200,7 @@ public class GameDriver {
         AIModuleEntityActorSmart aiModuleEntityActorSmart = new AIModuleEntityActorSmart(gameWorld);
 //        aiModuleEntityActorBasic.setEntityTarget(tankPlayer);
         aiModuleEntityActorSmart.autoSelectNewEntityTarget(true);
-        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0, AI_TANK_IMAGE_FILE, 2000);
+        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0, AI_TANK_IMAGE_FILE, 1500);
 
         // Dummy Tank with Dummy AI ("He's just standing there... MENACINGLY")
         AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
