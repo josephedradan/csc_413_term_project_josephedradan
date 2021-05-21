@@ -1,11 +1,12 @@
-package edu.csc413.tankgame.controller;
+package edu.csc413.tankgame;
 
-import edu.csc413.tankgame.WallInformation;
+import edu.csc413.tankgame.controller.KeyboardInterpreter;
 import edu.csc413.tankgame.model.Entity;
+import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.EntityPhysical;
 import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorBasic;
-import edu.csc413.tankgame.model.ai.AIModuleEntityActorSmartCheating;
+import edu.csc413.tankgame.model.ai.AIModuleEntityActorCheating;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorSmart;
 import edu.csc413.tankgame.model.ai.AIModuleEntityActorTestDummy;
 import edu.csc413.tankgame.model.shell.Shell;
@@ -110,57 +111,94 @@ public class GameDriver {
     private void setUpGame() {
         gameWorld = new GameWorld(runGameView);
         initializeWWalls(gameWorld);
-
+        System.out.println("RESET");
         KeyboardInterpreter keyboardInterpreter = new KeyboardInterpreter(
                 KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
-        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, TANK_PLAYER_INITIAL_X, TANK_PLAYER_INITIAL_Y, TANK_PLAYER_INITIAL_ANGLE);
+        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, 0, 0, TANK_PLAYER_INITIAL_ANGLE);
 
-        // Hacker
-        AIModuleEntityActorSmartCheating aiModuleTankSpinHack2 = new AIModuleEntityActorSmartCheating(gameWorld);
-        aiModuleTankSpinHack2.setAccuracy(.99);
-        aiModuleTankSpinHack2.setTurnLefTurnSpeedSpinning(Math.PI / 60);
-        aiModuleTankSpinHack2.setEntityPhysicalTarget(tankPlayer);
-        aiModuleTankSpinHack2.autoSelectNewEntityTarget(true);
-        TankAIHacked tankAICheating2 = new TankAIHacked(aiModuleTankSpinHack2, ID_TANK_AI_4, TANK_X_UPPER_BOUND, TANK_Y_UPPER_BOUND, 0);
-        tankAICheating2.enableNoCooldown(true);
-        tankAICheating2.enableGodMode(false);
+        /*
+        Hacking AI that is spin hacking and blinking randomly across the map and wants to kill you first and then
+        everything else (literally)
 
-        // An ally until the target is dead...
-        AIModuleEntityActorSmartCheating aiModuleTankSpinHack = new AIModuleEntityActorSmartCheating(gameWorld);
-        aiModuleTankSpinHack.setAccuracy(.98);
-        aiModuleTankSpinHack.setTurnLefTurnSpeedSpinning(Math.PI / 12);
-        aiModuleTankSpinHack.setEntityPhysicalTarget(tankAICheating2);
-        aiModuleTankSpinHack.autoSelectNewEntityTarget(true);
-        TankAIHacked tankAICheating = new TankAIHacked(aiModuleTankSpinHack, ID_TANK_AI_2, 0, 0, 0);
-        tankAICheating.enableNoCooldown(true);
-        tankAICheating.enableGodMode(false);
+        AI:
+            - Target tankPlayer then Target Other Actors then Target all the other entities
 
-        // Basic AI that targets all entities other than shells
+        Hacks:
+            - .99 Percent accuracy based on target
+            - Spin hacking with position blinking
+            - 1500 Health
+            - 0 Cool Down
+        */
+        AIModuleEntityActorCheating aiModuleTankSpinHackBigGuy = new AIModuleEntityActorCheating(gameWorld);
+        aiModuleTankSpinHackBigGuy.setAccuracy(.99);
+        aiModuleTankSpinHackBigGuy.setTurnLefTurnSpeedSpinning(Math.PI / 60);
+        aiModuleTankSpinHackBigGuy.setEntityTarget(tankPlayer);
+        aiModuleTankSpinHackBigGuy.autoSelectNewEntityTarget(true);
+        TankAIHacked tankAICheatingBigGuy = new TankAIHacked(aiModuleTankSpinHackBigGuy, ID_TANK_AI_4, TANK_X_UPPER_BOUND, TANK_Y_UPPER_BOUND, 0, IMAGE_TANK_AI, 1500);
+        tankAICheatingBigGuy.enableNoCoolDown(true);
+        tankAICheatingBigGuy.enableGodMode(false);
+
+        /*
+        Hacking AI that is spin hacking and blinking randomly across the map to kill the first hacker and then
+        everything else (literally)
+
+        AI:
+            - Target tankAICheatingBigGuy then Target Other Actors then Target all the other entities
+
+        Hacks:
+            - .98 Percent accuracy
+            - Faster spin hacking with position blinking
+            - 0 Cool Down
+
+        */
+        AIModuleEntityActorCheating aiModuleTankSpinHackFastGuy = new AIModuleEntityActorCheating(gameWorld);
+        aiModuleTankSpinHackFastGuy.setAccuracy(.98);
+        aiModuleTankSpinHackFastGuy.setTurnLefTurnSpeedSpinning(Math.PI / 12);
+        aiModuleTankSpinHackFastGuy.setEntityTarget(tankAICheatingBigGuy);
+        aiModuleTankSpinHackFastGuy.autoSelectNewEntityTarget(true);
+        TankAIHacked tankAICheatingFastGuy = new TankAIHacked(aiModuleTankSpinHackFastGuy, ID_TANK_AI_2, 0, 0, 0);
+        tankAICheatingFastGuy.enableNoCoolDown(true);
+        tankAICheatingFastGuy.enableGodMode(false);
+
+        /*
+        Basic AI that targets all entities other than shells
+
+        AI:
+            - Target Other Actors then Target all the other entities
+            - Does not get too close to target
+
+        */
         AIModuleEntityActorBasic aiModuleEntityActorBasic = new AIModuleEntityActorBasic(gameWorld);
-//        aiModuleEntityActorBasic.setEntityPhysicalTarget(tankPlayer);
+//        aiModuleEntityActorBasic.setEntityTarget(tankPlayer);
         aiModuleEntityActorBasic.autoSelectNewEntityTarget(true);
-        TankAI tankAIAutoTarget = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_3, 400, 400, 0);
+        TankAI tankAIBasic = new TankAI(aiModuleEntityActorBasic, ID_TANK_AI_5, 900, 0, 0);
 
-        // Dummy Tank with Dummy AI
-        AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
-        aiModuleEntityActorTestDummy.setEntityPhysicalTarget(tankPlayer);
-        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, ID_TANK_AI_1, 500, 500, 0);
+        /*
+        Smarter AI that targets all entities and if you shot near this
 
-        // Basic AI that targets all entities other than shells
+        AI:
+            - Target Other Actors then Target all the other entities UNLESS you fire at or near this AI who will then
+              reduce it's incoming damage by moving away and destroying incoming shells that might kill this tank and
+              then target the tank who shot those shells.
+
+        */
         AIModuleEntityActorSmart aiModuleEntityActorSmart = new AIModuleEntityActorSmart(gameWorld);
-//        aiModuleEntityActorBasic.setEntityPhysicalTarget(tankPlayer);
+//        aiModuleEntityActorBasic.setEntityTarget(tankPlayer);
         aiModuleEntityActorSmart.autoSelectNewEntityTarget(true);
-        TankAI tankAIAutoTarget2 = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0);
+        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0);
 
+        // Dummy Tank with Dummy AI ("He's just standing there... MENACINGLY")
+        AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
+        aiModuleEntityActorTestDummy.setEntityTarget(tankPlayer);
+        TankAI tankAITestDummy = new TankAITestDummy(aiModuleEntityActorTestDummy, ID_TANK_AI_1, 500, 500, 0);
 
         gameWorld.addEntityToQueueForWorld(tankPlayer);
         gameWorld.addEntityToQueueForWorld(tankAITestDummy);
-        gameWorld.addEntityToQueueForWorld(tankAICheating);
-        gameWorld.addEntityToQueueForWorld(tankAICheating2);
-//        gameWorld.addEntityToQueueForWorld(tankAIAutoTarget);
-        gameWorld.addEntityToQueueForWorld(tankAIAutoTarget2);
-
+        gameWorld.addEntityToQueueForWorld(tankAICheatingFastGuy);
+        gameWorld.addEntityToQueueForWorld(tankAICheatingBigGuy);
+        gameWorld.addEntityToQueueForWorld(tankAIBasic);
+        gameWorld.addEntityToQueueForWorld(tankAISmart);
 
     }
 
@@ -189,11 +227,15 @@ public class GameDriver {
 
             runGameView.setSpriteLocationAndAngle(entity);
             runGameView.setSpriteImage(entity);
+
+            if (entityCurrent instanceof EntityActor) {
+                runGameView.drawInformationEntityPhysical((EntityPhysical) entityCurrent);
+            }
         }
 
 
         /**
-         * COLLISION CHECKING IS AFTER TO GUARANTEE THAT 2 OBJECTS HAVE COLLIDED AT THE COST OF SPEED
+         * COLLISION CHECKING IS AFTER TO GUARANTEE THAT OBJECTS THAT COLLIDED ARE HANDLED
          *
          * TODO: IF THE BELOW CODE IS NOT COMMENTED OUT, THEN I DON'T HAVE TIME TO WRITE AN OPTIMAL COLLISION ALGORITHM
          */
@@ -201,6 +243,7 @@ public class GameDriver {
             for (Entity entityDoingTheHit : gameWorld.getEntitiesFast()) {
                 if (!entityHit.equals(entityDoingTheHit)) {
                     boolean collision = entityHit.checkCollision(gameWorld, entityDoingTheHit);
+
                     if (collision) {
                         animationHandler(entityHit, entityDoingTheHit);
                     }
@@ -238,7 +281,7 @@ public class GameDriver {
         for (WallInformation wallInformation : wallInformationList) {
 
             gameWorld.addEntityToQueueForWorld(new Wall(
-                    ID_WALL_STANDARD + gameWorld.getUniqueNumberForId(),
+                    ID_WALL_BASIC + gameWorld.getUniqueNumberForId(),
                     wallInformation.getX(),
                     wallInformation.getY(),
                     0,

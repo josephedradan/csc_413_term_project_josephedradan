@@ -30,15 +30,15 @@ import edu.csc413.tankgame.model.GameWorld;
 
 import static edu.csc413.tankgame.Constants.*;
 
-public class AIModuleEntityActorSmartCheating extends AIModuleEntityActorSmart {
+public class AIModuleEntityActorCheating extends AIModuleEntityActor {
 
     protected double turnLefTurnSpeedSpinning = Math.PI / 12;
 
     protected boolean moveDown = true;
+
     protected boolean moveRight = true;
 
-
-    public AIModuleEntityActorSmartCheating(GameWorld gameWorld) {
+    public AIModuleEntityActorCheating(GameWorld gameWorld) {
         super(gameWorld);
     }
 
@@ -59,8 +59,8 @@ public class AIModuleEntityActorSmartCheating extends AIModuleEntityActorSmart {
             moveRight = false;
         }
 
-//        System.out.println(Math.round(Math.toDegrees( getY())));
-//        System.out.println(Math.round(Math.toDegrees(entityActor.getAngle())) + " " + entityActor.getY());
+//        System.out.println(Math.round(Math.toDegrees( getYCorrected())));
+//        System.out.println(Math.round(Math.toDegrees(entityActor.getAngle())) + " " + entityActor.getYCorrected());
 
         // Move vertically
         long angle = Math.abs(Math.round(Math.toDegrees(entityActor.getAngleRelativeToWorld())));
@@ -126,22 +126,22 @@ public class AIModuleEntityActorSmartCheating extends AIModuleEntityActorSmart {
 //    private boolean moveDown = true;
 //    private boolean moveRight = true;
 
-//        if (this.getY() <= 100) {
+//        if (this.getYCorrected() <= 100) {
 //            moveDown = true;
-//        } else if (this.getY() >= 924) {
+//        } else if (this.getYCorrected() >= 924) {
 //            moveDown = false;
 //        }
 //
-//        if (this.getX() <= 100) {
+//        if (this.getXCorrected() <= 100) {
 //            moveRight = true;
-//        } else if (this.getX() >= 668) {
+//        } else if (this.getXCorrected() >= 668) {
 //            moveRight = false;
 //        }
 //
 //        // Move vertically
-////        System.out.println(Math.round(Math.toDegrees( getY())));
+////        System.out.println(Math.round(Math.toDegrees( getYCorrected())));
 //
-//        System.out.println(Math.round(Math.toDegrees(this.getAngle())) + " " + this.getY());
+//        System.out.println(Math.round(Math.toDegrees(this.getAngle())) + " " + this.getYCorrected());
 //        if (moveDown) {
 //            long angle = Math.abs(Math.round(Math.toDegrees(this.getAngle())));
 //            if (angle == 90) {

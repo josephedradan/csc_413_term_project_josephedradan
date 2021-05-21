@@ -9,6 +9,11 @@ public class Constants {
     public static final double SHELL_WIDTH = 12.0;
     public static final double SHELL_HEIGHT = 8.0;
     public static final double SHELL_MOVEMENT_SPEED = 4.0;
+    public static final double SHELL_TURN_SPEED = 4.0;
+
+    public static final double SHELL_BASIC_DAMAGE = 100;
+    public static final double SHELL_BASIC_HEALTH = 10;
+    public static final int SHELL_BASIC_COOL_DOWN = 25;
 
     public static final double WALL_WIDTH = 32.0;
     public static final double WALL_HEIGHT = 32.0;
@@ -18,11 +23,10 @@ public class Constants {
     public static final String ID_TANK_AI_2 = "tank-ai-2";
     public static final String ID_TANK_AI_3 = "tank-ai-3";
     public static final String ID_TANK_AI_4 = "tank-ai-4";
-    public static final String ID_SHELL_STANDARD = "shell-standard-shell";
-    public static final String ID_WALL_STANDARD = "wall-standard-shell";
+    public static final String ID_TANK_AI_5 = "tank-ai-5";
+    public static final String ID_SHELL_BASIC = "shell-basic";
+    public static final String ID_WALL_BASIC = "wall-basic";
 
-    public static final double SHELL_DAMAGE_BASIC = 100;
-    public static final double SHELL_HEALTH = 10;
     public static final double TANK_HEALTH_PLAYER = 250.0;
     public static final double TANK_HEALTH_AI = 500.0;
     public static final double TANK_HEALTH_AI_BOSS = 3000.0;
@@ -52,11 +56,15 @@ public class Constants {
 
     public static final String IMAGE_TANK_PLAYER = "tank-player.png";
     public static final String IMAGE_TANK_AI = "tank-ai.png";
-    public static final String IMAGE_SHELL_STANDARD = "shell.png";
+    public static final String IMAGE_SHELL = "shell.png";
 
     public static final int COOL_DOWN_PRIMARY_ACTION = 25;
     public static final int COOL_DOWN_SECONDARY_ACTION = 25;
     public static final int COOL_DOWN_TERTIARY_ACTION = 25;
+
+    public static final int COOL_DOWN_DEFAULT = 25;
+    public static final int DAMAGE_DEFAULT = 10;
+
 
     public static final double AI_ACCURACY = .80; // 80 Percent accuracy
 

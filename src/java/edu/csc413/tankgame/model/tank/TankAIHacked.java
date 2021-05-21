@@ -37,7 +37,7 @@ public class TankAIHacked extends TankAI {
     protected boolean hacked = false;
 
     public TankAIHacked(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle, String image, double health) {
-        super(aiModuleEntityActor, id, x, y, angle, image,health );
+        super(aiModuleEntityActor, id, x, y, angle, image, health);
     }
 
     public TankAIHacked(AIModuleEntityActor aiModuleEntityActor, String id, double x, double y, double angle) {
@@ -70,7 +70,7 @@ public class TankAIHacked extends TankAI {
 
     @Override
     protected void doActionTank(GameWorld gameWorld) {
-        if (hacked){
+        if (hacked) {
             setHealth(100000000); // Basically toggling God Mode
 //            gainHealth(1000); // Gaining HP
 //            loseHealth(gameWorld, -1000); // If you ever used a memory editor in game before 😉
@@ -78,7 +78,7 @@ public class TankAIHacked extends TankAI {
         doActionTankAI(gameWorld);
     }
 
-    public void enableGodMode(boolean value){
+    public void enableGodMode(boolean value) {
         hacked = value;
     }
 }

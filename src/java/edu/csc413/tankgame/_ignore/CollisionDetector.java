@@ -37,7 +37,7 @@ package edu.csc413.tankgame._ignore;
 //    }
 //
 //    public void run() {
-//        ArrayList<Entity> entityArrayList = gameWorld.getEntitiesFast().stream().sorted(Comparator.comparingDouble(Entity::getX)).collect(Collectors.toCollection(ArrayList::new));
+//        ArrayList<Entity> entityArrayList = gameWorld.getEntitiesFast().stream().sorted(Comparator.comparingDouble(Entity::getXCorrected)).collect(Collectors.toCollection(ArrayList::new));
 //
 //        ArrayList<ArrayList<Entity>> entityArrayListActive = new ArrayList<>();
 //
@@ -46,13 +46,13 @@ package edu.csc413.tankgame._ignore;
 //            Entity entity1 = entityArrayList.get(i);
 //            Entity entity2 = entityArrayList.get(i + 1);
 //
-//            if ((entity1.getX() + entity1.getWidth()) > entity2.getX()) {
+//            if ((entity1.getXCorrected() + entity1.getWidth()) > entity2.getXCorrected()) {
 //
 ////                ArrayList<Entity> entityArrayListInner = new ArrayList<>();
 ////                entityArrayListInner.add(entity1);
 ////                entityArrayListInner.add(entity2);
 //
-//                if ((entity1.getY() + entity1.getHeight()) > entity2.getHeight()) {
+//                if ((entity1.getYCorrected() + entity1.getHeight()) > entity2.getHeight()) {
 //
 //                }
 //            }

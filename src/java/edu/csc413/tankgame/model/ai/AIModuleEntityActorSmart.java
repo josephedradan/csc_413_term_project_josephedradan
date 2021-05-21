@@ -42,10 +42,14 @@ public class AIModuleEntityActorSmart extends AIModuleEntityActorBasic {
      *
      * @param entityActor
      */
-    private void autoAimTowardsSmartAndTargetAggressor(EntityActor entityActor) {
+    protected void autoAimTowardsSmartAndTargetAggressor(EntityActor entityActor) {
+
+        // Check for incoming shells amd switch target to that object shooting those shells
         for (Entity entity : gameWorld.getEntitiesFast()) {
             if (entity instanceof Shell) {
                 Shell shell = (Shell) entity;
+
+                // Get Distance from shells
                 if (entityActor.getDistanceFromEntity(shell) < inMyZoneRadius) {
 
                     if (!(shell.getEntityParent().equals(entityActor))) {
@@ -55,7 +59,7 @@ public class AIModuleEntityActorSmart extends AIModuleEntityActorBasic {
 
                         // Change Target to the Aggressor
                         entityPhysicalTarget = shell.getEntityParent();
-                        System.out.println(entityPhysicalTarget);
+//                        System.out.println(entityPhysicalTarget);
                     }
                 }
             }

@@ -34,6 +34,7 @@ public abstract class EntityDynamic extends EntityPhysical {
     private double xPrevious = x;
     private double yPrevious = y;
 
+
     public EntityDynamic(String id, double x, double y, double angle, String image, double health) {
         super(id, x, y, angle, image, health);
     }
@@ -159,7 +160,7 @@ public abstract class EntityDynamic extends EntityPhysical {
      */
     public void doActionEntityPhysical(GameWorld gameWorld) {
         recordPreviousPosition(); // Overhead function
-        boundaryHandlerHandler(gameWorld);  // Overhead function
+        boundaryHandlerHandler(gameWorld); // Overhead function
         doActionEntityDynamic(gameWorld);
     }
 
@@ -169,6 +170,4 @@ public abstract class EntityDynamic extends EntityPhysical {
      * @param gameWorld The game world
      */
     public abstract void doActionEntityDynamic(GameWorld gameWorld);
-
-
 }

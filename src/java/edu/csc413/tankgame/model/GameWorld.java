@@ -25,7 +25,8 @@ public class GameWorld {
     private final LinkedList<Entity> entityLinkedListQueueRemoveFromWorld;
 
     public GameWorld(RunGameView runGameView) {
-        this.runGameView = runGameView;
+        this.runGameView = runGameView; // TODO Is this even allowed...
+
         entityHashMap = new HashMap<>();
         entityLinkedListQueueForWorld = new LinkedList<>();
         entityLinkedListQueueRemoveFromWorld = new LinkedList<>();
@@ -57,7 +58,13 @@ public class GameWorld {
      */
     private void addEntity(Entity entity) {
         entityHashMap.put(entity.getId(), entity);
-        runGameView.addSprite(entity.getId(), entity.getImage(), entity.getX(), entity.getY(), entity.getAngleRelativeToWorld());
+        runGameView.addSprite(entity.getId(), entity.getImage(), entity.getX(), entity.getY(),
+                entity.getAngleRelativeToWorld());
+
+        if (entity instanceof EntityActor) {
+            runGameView.addInformationEntityPhysical(entity.getId(), entity.getX(), entity.getY(),
+                    ((EntityPhysical) entity).getHealth(), entity.getWidth(), entity.getHeight());
+        }
 
     }
 
@@ -94,13 +101,14 @@ public class GameWorld {
      * "Too powerful to be left out public..."
      */
     private void removeEntity(Entity entity) {
-//        System.out.println(entity);
         runGameView.removeSprite(entity.getId());
+        if (entity instanceof EntityActor) {
+            runGameView.removeInformationEntityPhysical(entity.getId());
+        }
         entityHashMap.remove(entity.getId());
     }
 
-
-    public long getUniqueNumberForId(){
+    public long getUniqueNumberForId() {
         long number = uniqueNumberForIDCounter;
         uniqueNumberForIDCounter++;
         return number;

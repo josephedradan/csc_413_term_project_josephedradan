@@ -1,6 +1,7 @@
 package edu.csc413.tankgame.view;
 
 import edu.csc413.tankgame.model.Entity;
+import edu.csc413.tankgame.model.EntityPhysical;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +50,8 @@ public class RunGameView extends JPanel {
     private final Map<String, Sprite> spritesById = new HashMap<>();
     private final List<Animation> animations = new LinkedList<>();
 
+    private final Map<String, InformationEntityPhysical> stringEntityInformationMap = new HashMap<>();
+
     public RunGameView() {
         worldImage = new BufferedImage(SCREEN_DIMENSIONS.width, SCREEN_DIMENSIONS.height, BufferedImage.TYPE_INT_RGB);
         setBackground(Color.BLACK);
@@ -57,6 +60,10 @@ public class RunGameView extends JPanel {
     public void reset() {
         synchronized (spritesById) {
             spritesById.clear();
+
+        }
+        synchronized (stringEntityInformationMap) {
+            stringEntityInformationMap.clear();
         }
     }
 
@@ -64,8 +71,7 @@ public class RunGameView extends JPanel {
      * Adds a new image on screen with the given unique id. Once added, this sprite will be tracked by the RunGameView
      * until the sprite is explicitly removed with removeSprite, or until reset is called.
      */
-    public void addSprite(
-            String id, String entityImageFile, double initialX, double initialY, double initialAngle) {
+    public void addSprite(String id, String entityImageFile, double initialX, double initialY, double initialAngle) {
         synchronized (spritesById) {
             if (spritesById.containsKey(id)) {
                 throw new RuntimeException(
@@ -108,6 +114,33 @@ public class RunGameView extends JPanel {
         }
     }
 
+    // TODO Could look better
+    public void removeInformationEntityPhysical(String id) {
+        synchronized (stringEntityInformationMap) {
+            stringEntityInformationMap.remove(id);
+        }
+    }
+
+    // TODO Could look better
+    public void addInformationEntityPhysical(String id, double initialX, double initialY, double health, double entityWidth, double entityHeight) {
+        synchronized (stringEntityInformationMap) {
+            if (stringEntityInformationMap.containsKey(id)) {
+                throw new RuntimeException(
+                        "A entityInformation with id '" + id + "' already exists. Use drawInformationEntityPhysical instead.");
+            }
+            InformationEntityPhysical InformationEntityPhysical = new InformationEntityPhysical(entityWidth, entityHeight);
+            InformationEntityPhysical.setHealthBar(initialX, initialY, health);
+            stringEntityInformationMap.put(id, InformationEntityPhysical);
+        }
+    }
+
+    // TODO Could look better
+    public void drawInformationEntityPhysical(EntityPhysical entity) {
+        synchronized (stringEntityInformationMap) {
+            stringEntityInformationMap.get(entity.getId()).setHealthBar(entity.getX(), entity.getY(), entity.getHealth());
+        }
+    }
+
     /**
      * Adds an animation (specified with an AnimationResource -- see constants above for choices) at the given position
      * with the provided delay between each frame in the animation. Once the animation finishes, the RunGameView will
@@ -128,6 +161,26 @@ public class RunGameView extends JPanel {
         synchronized (spritesById) {
             for (Sprite sprite : spritesById.values()) {
                 buffer.drawImage(sprite.getEntityImage(), sprite.getAffineTransform(), null);
+            }
+        }
+
+        Graphics2D healthBar = worldImage.createGraphics();
+
+        synchronized (stringEntityInformationMap) {
+            for (InformationEntityPhysical informationEntityPhysical : stringEntityInformationMap.values()) {
+                healthBar.drawRect(
+                        (int) informationEntityPhysical.getXCorrected(),
+                        (int) informationEntityPhysical.getYCorrected(),
+                        (int) informationEntityPhysical.getWidth(),
+                        (int) informationEntityPhysical.getHeight()
+                );
+                healthBar.setColor(Color.GREEN);
+                healthBar.fillRect(
+                        (int) informationEntityPhysical.getXCorrected(),
+                        (int) informationEntityPhysical.getYCorrected(),
+                        (int) informationEntityPhysical.getWidth(),
+                        (int) informationEntityPhysical.getHeight()
+                );
             }
         }
 

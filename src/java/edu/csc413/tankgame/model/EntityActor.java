@@ -50,7 +50,7 @@ public abstract class EntityActor extends EntityDynamic {
     private int ActivateActionTertiaryCoolDownCount = 0;
     private boolean boolActivateActionTertiary;
 
-    protected boolean noCooldown = false;
+    protected boolean noCoolDown = false;
 
     public EntityActor(String id, double x, double y, double angle, String image, double health) {
         super(id, x, y, angle, image, health);
@@ -114,16 +114,22 @@ public abstract class EntityActor extends EntityDynamic {
      * Does the Cool Down overhead
      */
     private void doOverheadCoolDown() {
+        if (noCoolDown) {
+            noCoolDown();
+        }
+
         if (ActivateActionPrimaryCoolDownCount <= 0) {
             boolActivateActionPrimary = true;
         } else {
             --ActivateActionPrimaryCoolDownCount;
         }
+
         if (ActivateActionSecondaryCoolDownCount <= 0) {
             boolActivateActionSecondary = true;
         } else {
             --ActivateActionSecondaryCoolDownCount;
         }
+
         if (ActivateActionTertiaryCoolDownCount <= 0) {
             boolActivateActionTertiary = true;
         } else {
@@ -133,9 +139,6 @@ public abstract class EntityActor extends EntityDynamic {
 
     @Override
     public void doActionEntityDynamic(GameWorld gameWorld) {
-        if (noCooldown) {
-            noCooldown();
-        }
         doOverheadCoolDown();
         doActionEntityActor(gameWorld);
     }
@@ -145,11 +148,11 @@ public abstract class EntityActor extends EntityDynamic {
     /**
      * Since i'm limited on time to create really good game design, i'm stuck with toggling cheats.
      */
-    public void enableNoCooldown(boolean value) {
-        noCooldown = value;
+    public void enableNoCoolDown(boolean value) {
+        noCoolDown = value;
     }
 
-    private void noCooldown() {
+    private void noCoolDown() {
         ActivateActionPrimaryCoolDownCount = 0;
         ActivateActionSecondaryCoolDownCount = 0;
         ActivateActionTertiaryCoolDownCount = 0;

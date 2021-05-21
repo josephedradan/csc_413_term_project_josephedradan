@@ -395,27 +395,27 @@ public abstract class Entity {
     public boolean checkCollision(GameWorld gameWorld, Entity entity) {
 
         // Side Collision Check
-//        if (collisionPseudoByGoingLeft(entity) || collisionPseudoByGoingRight(entity)) {
-//            if (collisionPseudoByGoingUp(entity) || collisionPseudoByGoingDown(entity)) {
+        if (collisionPseudoByGoingLeft(entity) || collisionPseudoByGoingRight(entity)) {
+            if (collisionPseudoByGoingUp(entity) || collisionPseudoByGoingDown(entity)) {
 //                System.out.printf("S %s %s\n", this, entity);
-//                this.collidedStandard(gameWorld, entity);
-////                entity.collidedStandard(gameWorld, this); // Do collision for the given entity immediately
-//
-//            }
-//        }
+                this.collidedEntity(gameWorld, entity);
+//                entity.collidedEntity(gameWorld, this); // DO NOT TELL THE OTHER ENTITY THAT THEY HAVE COLLIDED
+                return true;
+            }
+        }
 
         // Inside Collision Check
-        if (collisionInside(entity)) {
+        else if (collisionInside(entity)) {
 //            System.out.printf("I %s %s\n", this, entity);
-            this.collidedStandard(gameWorld, entity);
+            this.collidedEntity(gameWorld, entity);
             return true;
         }
 
 //        if (collisionPseudoByGoingUp(entity) || collisionPseudoByGoingDown(entity)) {
 //            if (collisionPseudoByGoingLeft(entity) || collisionPseudoByGoingRight(entity)) {
 ////                System.out.printf("%s %s\n", this, entity);
-//                this.collidedStandard(gameWorld, entity);
-////                entity.collidedStandard(gameWorld, this);
+//                this.collidedEntity(gameWorld, entity);
+////                entity.collidedEntity(gameWorld, this);
 //            }
 //        }
 
@@ -480,7 +480,7 @@ public abstract class Entity {
     }
 
     /**
-     * Determine what side you collidedStandard with in a simple way by using the minimum value of how much you are inside of
+     * Determine what side you collidedEntity with in a simple way by using the minimum value of how much you are inside of
      * the given entity
      * <p>
      * TODO: Very inefficient, fix please
@@ -491,7 +491,7 @@ public abstract class Entity {
      */
     protected short determineHorizontalOrVerticalCollisionSimple(Entity entity) {
         double xFromGoingRightDiff = this.x + this.getWidth() - entity.getX();
-        double xFromGoingLeftDIff = this.x + entity.getX() + entity.getWidth() - this.x;
+        double xFromGoingLeftDIff = entity.getX() + entity.getWidth() - this.x;
 
         double xMin = Math.min(Math.abs(xFromGoingRightDiff), Math.abs(xFromGoingLeftDIff));
 
@@ -513,7 +513,7 @@ public abstract class Entity {
      * @param gameWorld
      * @param entity
      */
-    protected abstract void collidedStandard(GameWorld gameWorld, Entity entity);
+    protected abstract void collidedEntity(GameWorld gameWorld, Entity entity);
 
     public void setImage(String image) {
         this.image = image;
@@ -522,7 +522,6 @@ public abstract class Entity {
     public String getImage() {
         return image;
     }
-
 
     public abstract void doActionEntity(GameWorld gameWorld);
 }

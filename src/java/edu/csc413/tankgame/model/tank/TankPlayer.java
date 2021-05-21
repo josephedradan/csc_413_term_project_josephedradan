@@ -37,15 +37,13 @@ public class TankPlayer extends Tank {
     public TankPlayer(KeyboardInterpreter keyboardInterpreter, String id, double x, double y, double angle, String image, double health) {
         super(id, x, y, angle, image, health);
         this.keyboardInterpreter = keyboardInterpreter;
-
     }
 
     public TankPlayer(KeyboardInterpreter keyboardInterpreter, String id, double x, double y, double angle) {
         this(keyboardInterpreter, id, x, y, angle, IMAGE_TANK_PLAYER, TANK_HEALTH_PLAYER);
     }
 
-    @Override
-    protected void doActionTank(GameWorld gameWorld) {
+    protected void doActionTankPlayer(GameWorld gameWorld) {
 
 //        System.out.println(this.getAngleRelativeToWorld());
 //        System.out.println(this.getAngleRadBetweenLineOfSightAndEntity(gameWorld.getEntity(TANK_AI_1_ID)));
@@ -55,19 +53,19 @@ public class TankPlayer extends Tank {
 //        System.out.println(getAngle());
 
         if (keyboardInterpreter.upPressed()) {
-            this.moveForward(Constants.TANK_MOVEMENT_SPEED);
+            this.moveForward(TANK_MOVEMENT_SPEED);
 //            System.out.println("Up");
-//            System.out.println(getX() + " " + getY());
+//            System.out.println(getXCorrected() + " " + getYCorrected());
 //            System.out.println(getAngle());
         }
         if (keyboardInterpreter.downPressed()) {
-            this.moveBackward(Constants.TANK_MOVEMENT_SPEED);
+            this.moveBackward(TANK_MOVEMENT_SPEED);
         }
         if (keyboardInterpreter.leftPressed()) {
-            this.turnLeft(Constants.TANK_TURN_SPEED);
+            this.turnLeft(TANK_TURN_SPEED);
         }
         if (keyboardInterpreter.rightPressed()) {
-            this.turnRight(Constants.TANK_TURN_SPEED);
+            this.turnRight(TANK_TURN_SPEED);
         }
         if (keyboardInterpreter.actionPressed()) {
             this.ActivateActionPrimary(gameWorld);
@@ -84,5 +82,10 @@ public class TankPlayer extends Tank {
 
 //        System.out.println(getQuadrantsEntityRelative(gameWorld.getEntity(TANK_AI_1_ID)));;
 //        System.out.println(this.getQuadrantRelativeToWorld());
+    }
+
+    @Override
+    protected void doActionTank(GameWorld gameWorld) {
+        doActionTankPlayer(gameWorld);
     }
 }

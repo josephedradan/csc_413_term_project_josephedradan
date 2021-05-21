@@ -26,4 +26,5 @@ package edu.csc413.tankgame.model;
 
 public interface Damager {
     double getDamage();
+
 }

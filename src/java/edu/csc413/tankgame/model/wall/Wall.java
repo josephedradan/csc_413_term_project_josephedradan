@@ -57,7 +57,7 @@ public class Wall extends EntityStatic {
      * @param entity
      */
     @Override
-    protected void collidedStandard(GameWorld gameWorld, Entity entity) {
+    protected void collidedEntity(GameWorld gameWorld, Entity entity) {
         if ((entity instanceof Tank)) {
             // TODO DO SOMETHING HERE... IDK LOL
             Tank tank = (Tank) entity;

@@ -29,6 +29,7 @@ import edu.csc413.tankgame.model.EntityActor;
 import edu.csc413.tankgame.model.EntityPhysical;
 import edu.csc413.tankgame.model.GameWorld;
 import edu.csc413.tankgame.model.shell.Shell;
+import edu.csc413.tankgame.model.tank.Tank;
 import edu.csc413.tankgame.model.tank.TankPlayer;
 
 import java.util.Collection;
@@ -145,8 +146,8 @@ public abstract class AIModule {
      * @param entityActor The entity that this Ai is working on
      */
     public void think(EntityActor entityActor) {
-        resetBrain();
-        imageChanger(entityActor);
+        resetBrain(); // Reset variables in the brain of the AI
+        imageChanger(entityActor); // Change entity
 
         // Select new target
         if (autoSelectNewEntityTargetBool) {
@@ -177,15 +178,29 @@ public abstract class AIModule {
         boolActivateActionTertiary = false;
     }
 
+    /**
+     * Change image of entityActor
+     * <p>
+     * Very specialized for tanks unfortunately...
+     *
+     * @param entityActor
+     */
     private void imageChanger(EntityActor entityActor) {
-        if (entityPhysicalTarget instanceof TankPlayer) {
-            entityActor.setImage(IMAGE_TANK_AI);
-        } else {
-            entityActor.setImage(IMAGE_TANK_PLAYER);
+        if (entityActor instanceof Tank) {
+            if (entityPhysicalTarget instanceof TankPlayer) {
+                entityActor.setImage(IMAGE_TANK_AI);
+            } else {
+                entityActor.setImage(IMAGE_TANK_PLAYER);
+            }
         }
     }
 
-    public void setEntityPhysicalTarget(EntityPhysical entity) {
+    /**
+     * If it exists... THEN IT CAN BE TARGETED >:)
+     *
+     * @param entity
+     */
+    public void setEntityTarget(Entity entity) {
         entityPhysicalTarget = entity;
     }
 
@@ -194,11 +209,15 @@ public abstract class AIModule {
     }
 
     /**
-     * Select the next target in the gameWorld
+     * Select the next target in the gameWorld by looking at every entity in the gameWorld
      */
     private void autoSelectNewtEntityTargetAlgorithm(EntityActor entityActor) {
+
+        // No Target
         if (entityPhysicalTarget == null) {
             Collection<Entity> entities = gameWorld.getEntitiesFast();
+
+            // Target Entity Actors first
             for (Entity entity : entities) {
                 if (entity instanceof EntityActor) {
 
@@ -212,13 +231,17 @@ public abstract class AIModule {
                     return;
                 }
             }
+
+            // Target Physical Entities
             for (Entity entity : entities) {
                 if (entity instanceof EntityPhysical && !(entity instanceof Shell)) {
                     entityPhysicalTarget = entity;
                     return;
                 }
             }
-        } else {
+        }
+        // Target
+        else {
             if (entityPhysicalTarget instanceof EntityPhysical) {
                 if (((EntityPhysical) entityPhysicalTarget).getHealth() <= 0) {
                     entityPhysicalTarget = null;

@@ -5,7 +5,7 @@ Name: Joseph Edradan
 Email: jedradan@mail.sfsu.edu
 
 Extra Features:
-* The Code is now highly modular
-* Advance AI support (also highly modular)
+* Animation
+* Modular AI with Hacked Tanks
 * Can support multiple players (because of KeyboardReader)
-
+* Health Bar
