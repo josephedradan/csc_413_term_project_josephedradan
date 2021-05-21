@@ -24,6 +24,8 @@ public class GameWorld {
     private final LinkedList<Entity> entityLinkedListQueueForWorld;
     private final LinkedList<Entity> entityLinkedListQueueRemoveFromWorld;
 
+    private int countEntityActor = 0;
+
     public GameWorld(RunGameView runGameView) {
         this.runGameView = runGameView; // TODO Is this even allowed...
 
@@ -64,6 +66,8 @@ public class GameWorld {
         if (entity instanceof EntityActor) {
             runGameView.addInformationEntityPhysical(entity.getId(), entity.getX(), entity.getY(),
                     ((EntityPhysical) entity).getHealth(), entity.getWidth(), entity.getHeight());
+
+            countEntityActor++;
         }
 
     }
@@ -104,6 +108,8 @@ public class GameWorld {
         runGameView.removeSprite(entity.getId());
         if (entity instanceof EntityActor) {
             runGameView.removeInformationEntityPhysical(entity.getId());
+
+            countEntityActor--;
         }
         entityHashMap.remove(entity.getId());
     }
@@ -112,5 +118,9 @@ public class GameWorld {
         long number = uniqueNumberForIDCounter;
         uniqueNumberForIDCounter++;
         return number;
+    }
+
+    public int getCountEntityActor() {
+        return countEntityActor;
     }
 }

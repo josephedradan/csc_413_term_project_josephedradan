@@ -30,8 +30,8 @@ public class GameDriver {
     private GameWorld gameWorld;
 
 
-    private final int deathTimer = 200;
-    private int deathTimerCounter = deathTimer;
+    private final int gameDone = 200;
+    private int gameDoneCounter = gameDone;
 
     public GameDriver() {
 
@@ -98,7 +98,7 @@ public class GameDriver {
         };
 
         // Resetting global defaults
-        deathTimerCounter = deathTimer;
+        gameDoneCounter = gameDone;
 
         // Run game on a thread
         new Thread(gameRunner).start();
@@ -112,10 +112,19 @@ public class GameDriver {
         gameWorld = new GameWorld(runGameView);
         initializeWWalls(gameWorld);
         System.out.println("RESET");
+
+
+        /*
+        The Player
+
+        Tank:
+            - 2000 Health tank foe balancing
+
+        */
         KeyboardInterpreter keyboardInterpreter = new KeyboardInterpreter(
                 KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
 
-        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, 0, 0, TANK_PLAYER_INITIAL_ANGLE);
+        TankPlayer tankPlayer = new TankPlayer(keyboardInterpreter, ID_TANK_PLAYER, 0, 0, TANK_PLAYER_INITIAL_ANGLE, PLAYER_TANK_IMAGE_FILE, 2000);
 
         /*
         Hacking AI that is spin hacking and blinking randomly across the map and wants to kill you first and then
@@ -189,7 +198,7 @@ public class GameDriver {
         AIModuleEntityActorSmart aiModuleEntityActorSmart = new AIModuleEntityActorSmart(gameWorld);
 //        aiModuleEntityActorBasic.setEntityTarget(tankPlayer);
         aiModuleEntityActorSmart.autoSelectNewEntityTarget(true);
-        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0,AI_TANK_IMAGE_FILE, 2000);
+        TankAI tankAISmart = new TankAI(aiModuleEntityActorSmart, ID_TANK_AI_3, 400, 400, 0, AI_TANK_IMAGE_FILE, 2000);
 
         // Dummy Tank with Dummy AI ("He's just standing there... MENACINGLY")
         AIModuleEntityActorTestDummy aiModuleEntityActorTestDummy = new AIModuleEntityActorTestDummy(gameWorld);
@@ -257,13 +266,14 @@ public class GameDriver {
         gameWorld.pushEntitiesFromQueueForWorldToWorld();
         gameWorld.popEntitiesFromQueueRemoveFromWorld();
 
-        if (gameWorld.getEntity(ID_TANK_PLAYER) == null) {
-            deathTimerCounter -= 1;
-            System.out.printf("Menu screen in %d\n", deathTimerCounter);
-            if (deathTimerCounter <= 0) {
+        if (gameWorld.getEntity(ID_TANK_PLAYER) == null || gameWorld.getCountEntityActor() == 1) {
+            gameDoneCounter -= 1;
+            System.out.printf("Menu screen in %d\n", gameDoneCounter);
+            if (gameDoneCounter <= 0) {
                 return false;
             }
         }
+
         return true;
     }
 
