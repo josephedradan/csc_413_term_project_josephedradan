@@ -30,7 +30,9 @@ import edu.csc413.tankgame.model.shell.ShellBasic;
 import static edu.csc413.tankgame.Constants.ID_SHELL_BASIC;
 
 /**
- * Factory that makes objects
+ * Factory that makes shells to allow for different types of shells
+ *
+ * FIXME: TOO BUSY TO COMPLETE...
  * <p>
  * Reference:
  * <p>

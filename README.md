@@ -6,6 +6,6 @@ Email: jedradan@mail.sfsu.edu
 
 Extra Features:
 * Animation
-* Modular AI with Hacked Tanks
+* Modular AI design
 * Can support multiple players (because of KeyboardReader)
 * Health Bar
