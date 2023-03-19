@@ -243,6 +243,7 @@ public abstract class AIModule {
         // Target
         else {
             if (entityPhysicalTarget instanceof EntityPhysical) {
+                // If target has HP less than 0 then change target
                 if (((EntityPhysical) entityPhysicalTarget).getHealth() <= 0) {
                     entityPhysicalTarget = null;
                 }

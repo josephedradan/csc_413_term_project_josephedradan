@@ -118,7 +118,7 @@ public class GameDriver {
         The Player
 
         Tank:
-            - 2500 Health tank foe balancing
+            - 2500 Health tank for balancing
 
         */
         KeyboardInterpreter keyboardInterpreter = new KeyboardInterpreter(

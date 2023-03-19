@@ -75,7 +75,5 @@ public class TankAI extends Tank {
     protected void doActionTank(GameWorld gameWorld) {
         doActionTankAI(gameWorld);
     }
-
-
 }
 

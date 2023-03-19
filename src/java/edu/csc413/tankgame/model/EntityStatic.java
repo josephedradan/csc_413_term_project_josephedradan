@@ -30,7 +30,6 @@ public abstract class EntityStatic extends EntityPhysical {
         super(id, x, y, angle, image, health);
     }
 
-
     @Override
     public void doActionEntityPhysical(GameWorld gameWorld) {
         doActionEntityStatic(gameWorld);

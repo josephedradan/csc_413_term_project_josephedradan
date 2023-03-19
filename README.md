@@ -9,3 +9,5 @@ Extra Features:
 * Modular AI design
 * Can support multiple players (because of KeyboardReader)
 * Health Bar
+
+_Original Repo_: https://github.com/sfsu-computer-science/term-project-josephedradan
