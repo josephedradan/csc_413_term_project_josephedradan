@@ -12,7 +12,7 @@ Extra Features:
 
 # Demo Images
 
-[image_1]()
-[image_2]()
+[image_1](raw.githubusercontent.com/josephedradan/csc_413_term_project_josephedradan/main/images/image_1.PNG)
+[image_2](raw.githubusercontent.com/josephedradan/csc_413_term_project_josephedradan/main/images/image_2.PNG)
 
 _Original Repo_: https://github.com/sfsu-computer-science/term-project-josephedradan
